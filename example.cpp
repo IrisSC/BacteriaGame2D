@@ -25,6 +25,8 @@ using namespace std;
 /*Variables for game Boundry*/
 float xMax = 50.0f;
 float yMax = 50.0f;
+float xCamera = 0;
+float yCamera = 0;
 
 /*Variables for timing*/
 float fDeltaTime = 0.0f;
@@ -43,7 +45,7 @@ Player myPlayer;
 
 //Variables for the positions of the squares
 float XRedSquare = 0;
-float YRedSquare = 0;
+float YRedSquare = 50.0f;
 float XGreenSquare = 5;
 float YGreenSquare = 0;
 
@@ -90,8 +92,16 @@ void display()
 	//clear the colour buffer
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	//set the camera x and y values
+	if (!(myPlayer.GetYCenter() <= (-yMax + 15)) && !(myPlayer.GetXCenter() >= (xMax - 15.0f))) {
+		xCamera = myPlayer.GetXCenter();
+	}
+	if (!(myPlayer.GetYCenter() <= (-yMax + 15)) && !(myPlayer.GetYCenter() >= (yMax - 15))) {
+		yCamera = myPlayer.GetYCenter();
+	}
 	//set the view matrix
-	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(-myPlayer.GetXCenter(), -myPlayer.GetYCenter(), 0.0));
+	//ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(-myPlayer.GetXCenter(), -myPlayer.GetYCenter(), 0.0));
+	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(-xCamera, -yCamera, 0.0));
 
 	//set the modelviewmatrix for the green square
 	/*glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(XGreenSquare, YGreenSquare, 0.0));
