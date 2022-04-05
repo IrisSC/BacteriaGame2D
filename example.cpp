@@ -14,6 +14,7 @@ using namespace std;
 #include "shaders\Shader.h"
 #include "Square.h"
 #include "Circle.h"
+#include "Player.h"
 
 //included for getting time
 #include <ctime>
@@ -29,16 +30,17 @@ float PreviousTicks = 0.0f;
 
 glm::mat4 ViewMatrix;  // matrix for the modelling and viewing
 glm::mat4 ProjectionMatrix; // matrix for the orthographic projection
-int screenWidth = 480, screenHeight = 480;
+int screenWidth = 500, screenHeight = 480;
 
 Square myRedSquare, myGreenSquare;
 Shader myShader;
+Player myPlayer;
 
 
 //Variables for the positions of the squares
 float XRedSquare = 0;
-float YRedSquare = 0;			
-float XGreenSquare = 5; 
+float YRedSquare = 0;
+float XGreenSquare = 5;
 float YGreenSquare = 0;
 
 //booleans to handle when the arrow keys are pressed or released.
@@ -66,11 +68,11 @@ void reshape(int width, int height)		// Resize the OpenGL window
 
 	glViewport(0, 0, width, height);						// set Viewport dimensions
 
-	ProjectionMatrix = glm::ortho(-15.0, 15.0, -15.0, 15.0); 
+	ProjectionMatrix = glm::ortho(-15.0, 15.0, -15.0, 15.0);
 }
 
 
-void display()									
+void display()
 {
 	//obtain the ticks from the clock and find difference with previous time.
 	currentTicks = std::clock();
@@ -85,28 +87,32 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	//set the view matrix
-	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
+	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(-myPlayer.GetXCenter(), -myPlayer.GetYCenter(), 0.0));
 
 	//set the modelviewmatrix for the green square
-	glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(XGreenSquare, YGreenSquare, 0.0));
-	
-	myGreenSquare.Render(myShader, ModelViewMatrix, ProjectionMatrix);
-	
+	/*glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(XGreenSquare, YGreenSquare, 0.0));
+	myGreenSquare.Render(myShader, ModelViewMatrix, ProjectionMatrix);*/
+
 	//Set the modelviewtransform for the red square.
 	glm::mat4 redTransform = glm::translate(ViewMatrix, glm::vec3(XRedSquare, YRedSquare, 0.0));
 	myRedSquare.Render(myShader, redTransform, ProjectionMatrix);
-	
+
+	//set the modelViewMatrix for the player circle
+	glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
+	myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
+
 	glutSwapBuffers();
 
 	Angle += 0.0005f;
 	if (Angle >= 360)
 		Angle = 0;
+
 }
 
 void init()
 {
-	glClearColor(1.0,1.0,1.0,0.0);						//sets the clear colour to black
-	
+	glClearColor(1.0, 1.0, 1.0, 0.0);						//sets the clear colour to black
+
 	if (!myShader.load("Basic", "./glslfiles/basicTransformations.vert", "./glslfiles/basicTransformations.frag"))
 	{
 		std::cout << "failed to load shader" << std::endl;
@@ -115,11 +121,15 @@ void init()
 	myRedSquare.SetSideSize(4.0f);
 	float red[3] = { 1,0,0 };
 	myRedSquare.Init(myShader, red);
-	
-	myGreenSquare.SetSideSize(3.0f);
+
+	/*myGreenSquare.SetSideSize(3.0f);
 	float green[3] = { 0,1,0 };
-	myGreenSquare.Init(myShader, green);
-	
+	myGreenSquare.Init(myShader, green);*/
+
+	//add the Player
+	myPlayer.SetRadius(4.0f);
+	float green[3] = { 0, 1, 0 };
+	myPlayer.Init(myShader, green);
 }
 
 void special(int key, int x, int y)
@@ -165,19 +175,22 @@ void processKeys()
 	if (Left)
 	{
 		//scale the speed based on the time between frames to obtain distance to move this frame.
-		XRedSquare -= 10.0 * fDeltaTime;
+		myPlayer.SetXCenter((myPlayer.GetXCenter() - 0.01f));
 	}
 	if (Right)
 	{
-		XRedSquare += 10.0 * fDeltaTime;
+		myPlayer.SetXCenter((myPlayer.GetXCenter() + 0.01f));
+		//XRedSquare += 10.0 * fDeltaTime;
 	}
 	if (Up)
 	{
-		YRedSquare += 10.0 * fDeltaTime;
+		myPlayer.SetYCenter((myPlayer.GetYCenter() + 0.01f));
+		//YRedSquare += 10.0 * fDeltaTime;
 	}
 	if (Down)
 	{
-		YRedSquare -= 10.0 * fDeltaTime;
+		myPlayer.SetYCenter((myPlayer.GetYCenter() - 0.01f));
+		//YRedSquare -= 10.0 * fDeltaTime;
 	}
 }
 
@@ -190,7 +203,7 @@ void idle()
 /**************** END OPENGL FUNCTIONS *************************/
 
 // FREEGLUT WINDOW SET UP
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
 
