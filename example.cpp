@@ -22,6 +22,10 @@ using namespace std;
 #include <iostream>
 using namespace std;
 
+/*Variables for game Boundry*/
+float xMax = 50.0f;
+float yMax = 50.0f;
+
 /*Variables for timing*/
 float fDeltaTime = 0.0f;
 float currentTicks = 0.0f;
@@ -174,23 +178,37 @@ void processKeys()
 {
 	if (Left)
 	{
-		//scale the speed based on the time between frames to obtain distance to move this frame.
-		myPlayer.SetXCenter((myPlayer.GetXCenter() - 0.01f));
+		//check to see if out of bounds
+		if (myPlayer.GetXCenter()-0.01f-myPlayer.GetRadius() > -xMax) {
+			//scale the speed based on the time between frames to obtain distance to move this frame.
+			myPlayer.SetXCenter((myPlayer.GetXCenter() - 0.01f));
+		}
 	}
 	if (Right)
 	{
-		myPlayer.SetXCenter((myPlayer.GetXCenter() + 0.01f));
-		//XRedSquare += 10.0 * fDeltaTime;
+		//check: make sure in bounds
+		if (myPlayer.GetXCenter() + 0.01f + myPlayer.GetRadius() < xMax) {
+			myPlayer.SetXCenter((myPlayer.GetXCenter() + 0.01f));
+			//XRedSquare += 10.0 * fDeltaTime;
+		}
 	}
 	if (Up)
 	{
-		myPlayer.SetYCenter((myPlayer.GetYCenter() + 0.01f));
-		//YRedSquare += 10.0 * fDeltaTime;
+		//check: make sure in bounds
+		if (myPlayer.GetYCenter() + 0.01f + myPlayer.GetRadius() < yMax) {
+			myPlayer.SetYCenter((myPlayer.GetYCenter() + 0.01f));
+			//YRedSquare += 10.0 * fDeltaTime;
+		}
+		
 	}
 	if (Down)
 	{
-		myPlayer.SetYCenter((myPlayer.GetYCenter() - 0.01f));
-		//YRedSquare -= 10.0 * fDeltaTime;
+		//Check: make sure in bounds
+		if (myPlayer.GetYCenter() - 0.01f - myPlayer.GetRadius() > -yMax) {
+			myPlayer.SetYCenter((myPlayer.GetYCenter() - 0.01f));
+			//YRedSquare -= 10.0 * fDeltaTime;
+		}
+		
 	}
 }
 
