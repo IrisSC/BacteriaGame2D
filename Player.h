@@ -22,6 +22,7 @@ public:
 	void SetRadius(float radius);
 	void SetXCenter(float x);
 	void SetYCenter(float y);
+	float GetRadius();
 	float GetXCenter();
 	float GetYCenter();
 	void Init(Shader& shader, float colour[3]);

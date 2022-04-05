@@ -26,6 +26,10 @@ void Player::SetYCenter(float y) {
 	yCenter = y;
 }
 
+float Player::GetRadius() {
+	return m_Radius;
+}
+
 float Player::GetXCenter() {
 	return xCenter;
 }
