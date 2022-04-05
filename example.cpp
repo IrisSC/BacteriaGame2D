@@ -44,8 +44,8 @@ Player myPlayer;
 
 
 //Variables for the positions of the squares
-float XRedSquare = 0;
-float YRedSquare = 50.0f;
+float XRedSquare = -50.0f;
+float YRedSquare = 0;
 float XGreenSquare = 5;
 float YGreenSquare = 0;
 
@@ -93,7 +93,7 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	//set the camera x and y values
-	if (!(myPlayer.GetYCenter() <= (-yMax + 15)) && !(myPlayer.GetXCenter() >= (xMax - 15.0f))) {
+	if (!(myPlayer.GetXCenter() <= (-xMax + 15)) && !(myPlayer.GetXCenter() >= (xMax - 15))) {
 		xCamera = myPlayer.GetXCenter();
 	}
 	if (!(myPlayer.GetYCenter() <= (-yMax + 15)) && !(myPlayer.GetYCenter() >= (yMax - 15))) {
