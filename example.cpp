@@ -53,6 +53,7 @@ BadBacteria enemy3(3.0f, 1.0f);
 BadBacteria enemy4(0.0f, 0.0f);
 int timeToReplicate = 0;
 int numAddBB = 4;
+int erase = -1;
 float num = -5.0f;
 
 
@@ -163,7 +164,8 @@ void display()
 			cout << " minus one health" << (*it).second.GetHealth();
 		}
 		if (create.GetHealth() <= 0) {
-			//enemies.erase(it);
+			//saves key to erase when out of loop
+			erase = (*it).first;
 		}
 		else {
 			glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(create.GetXCenter(), create.GetYCenter(), 0.0));
@@ -171,7 +173,11 @@ void display()
 		}
 		
 	}
-	
+	//delete BB whos health is depleted
+	if (erase != -1) {
+		enemies.erase(erase);
+		erase = -1;
+	}
 
 	//set the modelViewMatrix for the player circle
 	glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
@@ -316,8 +322,8 @@ void idle()
 int main(int argc, char** argv)
 {
 	enemies.insert(std::pair<float, BadBacteria>(1, enemy1));
-	//enemies.insert(std::pair<float, BadBacteria>(2, enemy2));
-	//enemies.insert(std::pair<float, BadBacteria>(3, enemy3));
+	enemies.insert(std::pair<float, BadBacteria>(2, enemy2));
+	enemies.insert(std::pair<float, BadBacteria>(3, enemy3));
 
 	//replicate Bad Bacteria
 	/*if (timeToReplicate >= 200) {
