@@ -27,6 +27,9 @@
     <ClInclude Include="ImageLoading.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="example.cpp">
@@ -48,6 +51,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="ImageLoading.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

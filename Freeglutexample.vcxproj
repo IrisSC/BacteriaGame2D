@@ -24,6 +24,7 @@
     <ClInclude Include="ImageLoading.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="shaders\Shader.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="Square.h" />
   </ItemGroup>
   <ItemGroup>
@@ -33,6 +34,7 @@
     <ClCompile Include="ImageLoading.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="shaders\Shader.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Square.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

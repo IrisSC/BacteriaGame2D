@@ -16,6 +16,7 @@ using namespace std;
 #include "Circle.h"
 #include "Player.h"
 #include "BadBacteria.h"
+#include "Sprite.h"
 
 #include <map>
 #include <list>
@@ -25,6 +26,7 @@ using namespace std;
 #include <ctime>
 
 #include <iostream>
+
 using namespace std;
 
 /*Variables for game Boundry*/
@@ -45,6 +47,7 @@ int screenWidth = 500, screenHeight = 480;
 
 Square myRedSquare, myGreenSquare;
 Shader myShader;
+Sprite background;
 Player myPlayer;
 map<int, BadBacteria> enemies;
 BadBacteria enemy1(5.0f, 5.0f);
