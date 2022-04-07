@@ -15,6 +15,11 @@ using namespace std;
 #include "Square.h"
 #include "Circle.h"
 #include "Player.h"
+#include "BadBacteria.h"
+
+#include <map>
+#include <list>
+#include <iterator>
 
 //included for getting time
 #include <ctime>
@@ -41,6 +46,14 @@ int screenWidth = 500, screenHeight = 480;
 Square myRedSquare, myGreenSquare;
 Shader myShader;
 Player myPlayer;
+map<int, BadBacteria> enemies;
+BadBacteria enemy1(5.0f, 5.0f);
+BadBacteria enemy2(1.0f, 1.0f);
+BadBacteria enemy3(3.0f, 1.0f);
+BadBacteria enemy4(0.0f, 0.0f);
+int timeToReplicate = 0;
+int numAddBB = 4;
+float num = -5.0f;
 
 
 //Variables for the positions of the squares
@@ -79,7 +92,10 @@ void reshape(int width, int height)		// Resize the OpenGL window
 
 
 void display()
-{
+{ 
+	//initials the objects for rendering 
+	init();
+	//BadBacteria enemy1(5.0f, 5.0f);
 	//obtain the ticks from the clock and find difference with previous time.
 	currentTicks = std::clock();
 	float deltaTicks = (float)(currentTicks - PreviousTicks);
@@ -110,6 +126,38 @@ void display()
 	//Set the modelviewtransform for the red square.
 	glm::mat4 redTransform = glm::translate(ViewMatrix, glm::vec3(XRedSquare, YRedSquare, 0.0));
 	myRedSquare.Render(myShader, redTransform, ProjectionMatrix);
+
+	//replicate Bad Bacteria
+	if (timeToReplicate == 2000) {
+		BadBacteria enemy5(num, -5.0f);
+		enemies.insert(std::pair<float, BadBacteria>(numAddBB, enemy5));
+
+		/*for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
+			BadBacteria newBB((*it).second.GetXCenter() + 1.0f, (*it).second.GetYCenter() + 1.0f);
+			enemies.insert(std::pair<float, BadBacteria>(numAddBB, newBB));
+			numAddBB++;
+		}
+		timeToReplicate = 0;
+		*/
+		numAddBB = num + 3;
+		timeToReplicate = 0;
+		num = num + 1.0f;
+	}
+	else {
+		timeToReplicate++;
+		cout << timeToReplicate << "  ";
+	}
+
+	//Set the modelview transform for the emeny bacteria
+	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
+		//cout << " inside display for loop ";
+		BadBacteria create = (*it).second;
+		float xLocation = create.GetXCenter();
+		//cout << xLocation;
+		glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(create.GetXCenter(), create.GetYCenter(), 0.0));
+		enemy1.Render(myShader, enemyTransform, ProjectionMatrix);
+	}
+	
 
 	//set the modelViewMatrix for the player circle
 	glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
@@ -144,6 +192,26 @@ void init()
 	myPlayer.SetRadius(4.0f);
 	float green[3] = { 0, 1, 0 };
 	myPlayer.Init(myShader, green);
+	
+	//add the enemies
+	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
+		//cout << "inside init loop" << (*it).second.GetXCenter();
+		(*it).second.SetRadius(2.0f);
+		(*it).second.Init(myShader, red);
+	}
+	
+	enemy1.SetRadius(2.0f);
+	enemy1.Init(myShader, red);
+
+	//enemy2.SetRadius(2.0f);
+	//enemy2.Init(myShader, red);
+}
+
+//render new Bad Bacteria
+void initNewBB(BadBacteria newBB) {
+	float red[3] = { 1,0,0 };
+	newBB.SetRadius(2.0f);
+	newBB.Init(myShader, red);
 }
 
 void special(int key, int x, int y)
@@ -233,6 +301,22 @@ void idle()
 // FREEGLUT WINDOW SET UP
 int main(int argc, char** argv)
 {
+	enemies.insert(std::pair<float, BadBacteria>(1, enemy1));
+	enemies.insert(std::pair<float, BadBacteria>(2, enemy2));
+	enemies.insert(std::pair<float, BadBacteria>(3, enemy3));
+
+	//replicate Bad Bacteria
+	/*if (timeToReplicate >= 200) {
+		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
+			BadBacteria newBB((*it).second.GetXCenter(), (*it).second.GetYCenter());
+			enemies.insert(std::pair<float, BadBacteria>(3, newBB));
+		}
+	}
+	else {
+		timeToReplicate++;
+		cout << timeToReplicate << "  ";
+	}*/
+
 	glutInit(&argc, argv);
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -256,7 +340,7 @@ int main(int argc, char** argv)
 	cout << OpenGLVersion[0] << " " << OpenGLVersion[1] << endl;
 
 	//initialise the objects for rendering
-	init();
+	//init();
 
 	//specify which function will be called to refresh the screen.
 	glutDisplayFunc(display);

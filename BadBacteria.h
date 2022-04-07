@@ -24,6 +24,7 @@ public:
 	void SetRadius(float r);
 	void SetXCenter(float x);
 	void SetYCenter(float y);
+	float GetRadius();
 	float GetXCenter();
 	float GetYCenter();
 
