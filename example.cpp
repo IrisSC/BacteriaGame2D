@@ -42,7 +42,7 @@ int screenWidth = 500, screenHeight = 480;
 Square myRedSquare, myGreenSquare;
 Shader myShader;
 Player myPlayer;
-BadBacteria enemy1;
+BadBacteria enemy1(5.0f, 5.0f);
 
 
 //Variables for the positions of the squares
