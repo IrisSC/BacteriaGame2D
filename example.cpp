@@ -15,6 +15,7 @@ using namespace std;
 #include "Square.h"
 #include "Circle.h"
 #include "Player.h"
+#include "BadBacteria.h"
 
 //included for getting time
 #include <ctime>
@@ -41,6 +42,7 @@ int screenWidth = 500, screenHeight = 480;
 Square myRedSquare, myGreenSquare;
 Shader myShader;
 Player myPlayer;
+BadBacteria enemy1;
 
 
 //Variables for the positions of the squares
@@ -111,6 +113,10 @@ void display()
 	glm::mat4 redTransform = glm::translate(ViewMatrix, glm::vec3(XRedSquare, YRedSquare, 0.0));
 	myRedSquare.Render(myShader, redTransform, ProjectionMatrix);
 
+	//Set the modelview transform for the emeny bacteria
+	glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(enemy1.GetXCenter(), enemy1.GetYCenter(), 0.0));
+	enemy1.Render(myShader, enemyTransform, ProjectionMatrix);
+
 	//set the modelViewMatrix for the player circle
 	glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
 	myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
@@ -144,6 +150,10 @@ void init()
 	myPlayer.SetRadius(4.0f);
 	float green[3] = { 0, 1, 0 };
 	myPlayer.Init(myShader, green);
+
+	//add the enemy
+	enemy1.SetRadius(2.0f);
+	enemy1.Init(myShader, red);
 }
 
 void special(int key, int x, int y)
