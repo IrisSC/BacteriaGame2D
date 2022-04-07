@@ -10,8 +10,8 @@ Player::Player() {
 	m_vboID[1] = 0;
 	m_Radius = 0.0f;
 
-	xCenter = 0.0f;
-	yCenter = 0.0f;
+	xCenter = -5.0f;
+	yCenter = 5.0f;
 }
 
 void Player::SetRadius(float radius) {

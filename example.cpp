@@ -53,6 +53,7 @@ BadBacteria enemy3(3.0f, 1.0f);
 BadBacteria enemy4(0.0f, 0.0f);
 int timeToReplicate = 0;
 int numAddBB = 4;
+int erase = -1;
 float num = -5.0f;
 
 
@@ -145,7 +146,7 @@ void display()
 	}
 	else {
 		timeToReplicate++;
-		cout << timeToReplicate << "  ";
+		//cout << timeToReplicate << "  ";
 	}
 
 	//Set the modelview transform for the emeny bacteria
@@ -154,10 +155,29 @@ void display()
 		BadBacteria create = (*it).second;
 		float xLocation = create.GetXCenter();
 		//cout << xLocation;
-		glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(create.GetXCenter(), create.GetYCenter(), 0.0));
-		enemy1.Render(myShader, enemyTransform, ProjectionMatrix);
+		//check if in collition with Player
+		if ((myPlayer.GetXCenter() - create.GetXCenter())*(myPlayer.GetXCenter() - create.GetXCenter())+ 
+			(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) < 
+			(myPlayer.GetRadius() + create.GetRadius())* (myPlayer.GetRadius() + create.GetRadius())) {
+			//minus one from health of BB
+			(*it).second.SetHealth((*it).second.GetHealth() - 1);
+			cout << " minus one health" << (*it).second.GetHealth();
+		}
+		if (create.GetHealth() <= 0) {
+			//saves key to erase when out of loop
+			erase = (*it).first;
+		}
+		else {
+			glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(create.GetXCenter(), create.GetYCenter(), 0.0));
+			create.Render(myShader, enemyTransform, ProjectionMatrix);
+		}
+		
 	}
-	
+	//delete BB whos health is depleted
+	if (erase != -1) {
+		enemies.erase(erase);
+		erase = -1;
+	}
 
 	//set the modelViewMatrix for the player circle
 	glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
