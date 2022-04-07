@@ -145,7 +145,7 @@ void display()
 	}
 	else {
 		timeToReplicate++;
-		cout << timeToReplicate << "  ";
+		//cout << timeToReplicate << "  ";
 	}
 
 	//Set the modelview transform for the emeny bacteria
@@ -154,8 +154,22 @@ void display()
 		BadBacteria create = (*it).second;
 		float xLocation = create.GetXCenter();
 		//cout << xLocation;
-		glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(create.GetXCenter(), create.GetYCenter(), 0.0));
-		enemy1.Render(myShader, enemyTransform, ProjectionMatrix);
+		//check if in collition with Player
+		if ((myPlayer.GetXCenter() - create.GetXCenter())*(myPlayer.GetXCenter() - create.GetXCenter())+ 
+			(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) < 
+			(myPlayer.GetRadius() + create.GetRadius())* (myPlayer.GetRadius() + create.GetRadius())) {
+			//minus one from health of BB
+			(*it).second.SetHealth((*it).second.GetHealth() - 1);
+			cout << " minus one health" << (*it).second.GetHealth();
+		}
+		if (create.GetHealth() <= 0) {
+			//enemies.erase(it);
+		}
+		else {
+			glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(create.GetXCenter(), create.GetYCenter(), 0.0));
+			create.Render(myShader, enemyTransform, ProjectionMatrix);
+		}
+		
 	}
 	
 
@@ -302,8 +316,8 @@ void idle()
 int main(int argc, char** argv)
 {
 	enemies.insert(std::pair<float, BadBacteria>(1, enemy1));
-	enemies.insert(std::pair<float, BadBacteria>(2, enemy2));
-	enemies.insert(std::pair<float, BadBacteria>(3, enemy3));
+	//enemies.insert(std::pair<float, BadBacteria>(2, enemy2));
+	//enemies.insert(std::pair<float, BadBacteria>(3, enemy3));
 
 	//replicate Bad Bacteria
 	/*if (timeToReplicate >= 200) {
