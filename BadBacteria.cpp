@@ -9,7 +9,7 @@ BadBacteria::BadBacteria()
 	m_vaoID = 0;
 	m_vboID[0] = 0;
 	m_vboID[1] = 0;
-	m_Radius = 0.0f;
+	m_Radius = 2.0f;
 
 	health = 10;
 }
@@ -18,7 +18,7 @@ BadBacteria::BadBacteria(float x, float y) {
 	m_vaoID = 0;
 	m_vboID[0] = 0;
 	m_vboID[1] = 0;
-	m_Radius = 0.0f;
+	m_Radius = 2.0f;
 
 	health = 10;
 	xCenter = x;
@@ -36,6 +36,10 @@ void BadBacteria::SetXCenter(float x) {
 
 void BadBacteria::SetYCenter(float y) {
 	yCenter = y;
+}
+
+float BadBacteria::GetRadius() {
+	return m_Radius;
 }
 
 float BadBacteria::GetXCenter() {
@@ -64,9 +68,9 @@ void BadBacteria::Init(Shader& shader, float colour[3])
 		vert[m_NumOfVerts * 3 + 1] = ycoord;
 		vert[m_NumOfVerts * 3 + 2] = 0.0;
 
-		col[m_NumOfVerts * 3] = 0.0;
-		col[m_NumOfVerts * 3 + 1] = 0.0;
-		col[m_NumOfVerts * 3 + 2] = 1.0;
+		col[m_NumOfVerts * 3] = colour[0];
+		col[m_NumOfVerts * 3 + 1] = colour[1];
+		col[m_NumOfVerts * 3 + 2] = colour[2];
 
 
 		m_NumOfVerts++;

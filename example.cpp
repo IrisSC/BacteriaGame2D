@@ -17,6 +17,10 @@ using namespace std;
 #include "Player.h"
 #include "BadBacteria.h"
 
+#include <map>
+#include <list>
+#include <iterator>
+
 //included for getting time
 #include <ctime>
 
@@ -42,7 +46,12 @@ int screenWidth = 500, screenHeight = 480;
 Square myRedSquare, myGreenSquare;
 Shader myShader;
 Player myPlayer;
+map<int, BadBacteria> enemies;
 BadBacteria enemy1(5.0f, 5.0f);
+BadBacteria enemy2(1.0f, 1.0f);
+BadBacteria enemy3(3.0f, 1.0f);
+//enemies.insert(std::pair<float, BadBacteria>(1.0f, enemy1));
+//Players.insert(std::pair<int, string>(2, "Lin Dan"));
 
 
 //Variables for the positions of the squares
@@ -82,6 +91,7 @@ void reshape(int width, int height)		// Resize the OpenGL window
 
 void display()
 {
+	//BadBacteria enemy1(5.0f, 5.0f);
 	//obtain the ticks from the clock and find difference with previous time.
 	currentTicks = std::clock();
 	float deltaTicks = (float)(currentTicks - PreviousTicks);
@@ -114,8 +124,15 @@ void display()
 	myRedSquare.Render(myShader, redTransform, ProjectionMatrix);
 
 	//Set the modelview transform for the emeny bacteria
-	glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(enemy1.GetXCenter(), enemy1.GetYCenter(), 0.0));
-	enemy1.Render(myShader, enemyTransform, ProjectionMatrix);
+	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
+		//cout << " inside display for loop ";
+		BadBacteria create = (*it).second;
+		float xLocation = create.GetXCenter();
+		//cout << xLocation;
+		glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(create.GetXCenter(), create.GetYCenter(), 0.0));
+		enemy1.Render(myShader, enemyTransform, ProjectionMatrix);
+	}
+	
 
 	//set the modelViewMatrix for the player circle
 	glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
@@ -150,10 +167,20 @@ void init()
 	myPlayer.SetRadius(4.0f);
 	float green[3] = { 0, 1, 0 };
 	myPlayer.Init(myShader, green);
-
-	//add the enemy
+	
+	//add the enemies
+	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
+		cout << "inside init loop" << (*it).second.GetXCenter();
+		//BadBacteria create = (*it).second;
+		(*it).second.SetRadius(2.0f);
+		(*it).second.Init(myShader, red);
+	}
+	
 	enemy1.SetRadius(2.0f);
 	enemy1.Init(myShader, red);
+
+	//enemy2.SetRadius(2.0f);
+	//enemy2.Init(myShader, red);
 }
 
 void special(int key, int x, int y)
@@ -243,6 +270,10 @@ void idle()
 // FREEGLUT WINDOW SET UP
 int main(int argc, char** argv)
 {
+	enemies.insert(std::pair<float, BadBacteria>(1, enemy1));
+	enemies.insert(std::pair<float, BadBacteria>(2, enemy2));
+	enemies.insert(std::pair<float, BadBacteria>(3, enemy3));
+
 	glutInit(&argc, argv);
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
