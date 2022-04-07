@@ -24,6 +24,9 @@
     <ClInclude Include="BadBacteria.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="ImageLoading.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="example.cpp">
@@ -42,6 +45,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="BadBacteria.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageLoading.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
