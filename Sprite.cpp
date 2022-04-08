@@ -33,7 +33,7 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	//load png image
 	int imageHeight = 0;
 	int imageWidth = 0;
-	
+
 	//create the texture on the GPU
 	glGenTextures(1, &m_TexName);
 	glBindTexture(GL_TEXTURE_2D, m_TexName);
@@ -42,18 +42,18 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	
+
 	bool success = ImageLoading::loadImage(filename);
 	if (!success) {
 		std::cout << "Unable to load image file" << std::endl;
 		glDeleteTextures(1, &m_TexName);
-		return;  
+		return;
 	}
 	else
 	{
 		std::cout << "Image loaded " << std::endl;
 	}
-	
+
 
 	//Create the geometry
 	m_NumberOfVerts = 6;
@@ -96,7 +96,7 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 
 	glGenBuffers(3, m_vboID); // we need three VBOs - one for the vertices and one for the colours
 							//and an extra one for the texture coordinates
-							 
+
 	//Lets set up the vertices.
 	glBindBuffer(GL_ARRAY_BUFFER, m_vboID[0]);
 

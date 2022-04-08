@@ -123,6 +123,9 @@ void display()
 	//ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(-myPlayer.GetXCenter(), -myPlayer.GetYCenter(), 0.0));
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(-xCamera, -yCamera, 0.0));
 
+	//render the background
+	background.Render(myShader, ViewMatrix, ProjectionMatrix);
+
 	//set the modelviewmatrix for the green square
 	/*glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(XGreenSquare, YGreenSquare, 0.0));
 	myGreenSquare.Render(myShader, ModelViewMatrix, ProjectionMatrix);*/
@@ -196,16 +199,30 @@ void display()
 
 void init()
 {
-	glClearColor(1.0, 1.0, 1.0, 0.0);						//sets the clear colour to black
-
-	if (!myShader.load("Basic", "./glslfiles/basicTransformations.vert", "./glslfiles/basicTransformations.frag"))
+	if (!myShader.load("Basic", "./glslfiles/basicTexture.vert", "./glslfiles/basicTexture.frag"))
 	{
 		std::cout << "failed to load shader" << std::endl;
 	}
 
+
+	glClearColor(1.0, 1.0, 1.0, 0.0);						//sets the clear colour to black
+
+
+
+	/*if (!myShader.load("Basic", "./glslfiles/basicTransformations.vert", "./glslfiles/basicTransformations.frag"))
+	{
+		std::cout << "failed to load shader" << std::endl;
+	}*/
+	
+
 	myRedSquare.SetSideSize(4.0f);
 	float red[3] = { 1,0,0 };
 	myRedSquare.Init(myShader, red);
+
+	//create background
+	background.SetWidth(10.0f);
+	background.SetHeight(10.0f);
+	background.Init(myShader, red, "textures/background.png");
 
 	/*myGreenSquare.SetSideSize(3.0f);
 	float green[3] = { 0,1,0 };
