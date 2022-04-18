@@ -38,8 +38,8 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	glGenTextures(1, &m_TexName);
 	glBindTexture(GL_TEXTURE_2D, m_TexName);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);  //or use GL_CLAMP
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);  //or use GL_CLAMP
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
@@ -71,13 +71,13 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	vert[15] = halfWidth; vert[16] = -halfHeight; vert[17] = 0.0;
 
 	float tex[12];
-	tex[0] = 0.0f;	 tex[1] = 1.0;
-	tex[2] = 0.0f;	 tex[3] = 0.0;
-	tex[4] = 1.0f;	 tex[5] = 0.0;
+	tex[0] = 0.0f;	 tex[1] = 1.0f;
+	tex[2] = 0.0f;	 tex[3] = 0.0f;
+	tex[4] = 1.0f;	 tex[5] = 0.0f;
 
-	tex[6] = 0.0f;	 tex[7] = 1.0;
-	tex[8] = 1.0f;	 tex[9] = 1.0;
-	tex[10] = 1.0f;	 tex[11] = 0.0;
+	tex[6] = 0.0f;	 tex[7] = 1.0f;
+	tex[8] = 1.0f;	 tex[9] = 1.0f;
+	tex[10] = 1.0f;	 tex[11] = 0.0f;
 
 
 	float col[18];	// colour array

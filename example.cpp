@@ -126,6 +126,12 @@ void display()
 	//render the background
 	background.Render(myShader, ViewMatrix, ProjectionMatrix);
 
+	//set the modelViewMatrix for the player circle
+	glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
+	glEnable(GL_BLEND);
+		myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
+	glDisable(GL_BLEND);
+
 	//set the modelviewmatrix for the green square
 	/*glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(XGreenSquare, YGreenSquare, 0.0));
 	myGreenSquare.Render(myShader, ModelViewMatrix, ProjectionMatrix);*/
@@ -185,10 +191,6 @@ void display()
 		erase = -1;
 	}
 
-	//set the modelViewMatrix for the player circle
-	glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
-	myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
-
 	glutSwapBuffers();
 
 	Angle += 0.0005f;
@@ -219,11 +221,12 @@ void init()
 	float red[3] = { 1,0,0 };
 	myRedSquare.Init(myShader, red);
 
+
 	//create background
 	background.SetWidth(10.0f);
 	background.SetHeight(10.0f);
-	background.Init(myShader, red, "textures/background.png");
-
+	background.Init(myShader, red, "textures/sky.png");
+	
 	/*myGreenSquare.SetSideSize(3.0f);
 	float green[3] = { 0,1,0 };
 	myGreenSquare.Init(myShader, green);*/
@@ -231,7 +234,7 @@ void init()
 	//add the Player
 	myPlayer.SetRadius(4.0f);
 	float green[3] = { 0, 1, 0 };
-	myPlayer.Init(myShader, green);
+	myPlayer.Init(myShader, green, "textures/Background.png");
 	
 	//add the enemies
 	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
@@ -242,7 +245,7 @@ void init()
 	
 	enemy1.SetRadius(2.0f);
 	enemy1.Init(myShader, red);
-
+	
 	//enemy2.SetRadius(2.0f);
 	//enemy2.Init(myShader, red);
 }
