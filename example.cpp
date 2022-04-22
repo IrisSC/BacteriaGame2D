@@ -155,6 +155,14 @@ void display()
 		BadBacteria create = (*it).second;
 		float xLocation = create.GetXCenter();
 		//cout << xLocation;
+		// check if Bad Bacteria is close enough to player to run away
+		if ((myPlayer.GetXCenter() - create.GetXCenter()) * (myPlayer.GetXCenter() - create.GetXCenter()) +
+			(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) <
+			(myPlayer.GetRadius() + create.GetRadius()) * (myPlayer.GetRadius() + create.GetRadius()) + 100) {
+			//BB move away
+			(*it).second.SetXCenter((*it).second.GetXCenter() - myPlayer.GetXCenter());
+			(*it).second.SetYCenter((*it).second.GetYCenter() - myPlayer.GetYCenter());
+		}
 		//check if in collition with Player
 		if ((myPlayer.GetXCenter() - create.GetXCenter())*(myPlayer.GetXCenter() - create.GetXCenter())+ 
 			(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) < 
