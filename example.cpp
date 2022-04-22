@@ -160,8 +160,11 @@ void display()
 			(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) <
 			(myPlayer.GetRadius() + create.GetRadius()) * (myPlayer.GetRadius() + create.GetRadius()) + 100) {
 			//BB move away
-			(*it).second.SetXCenter((*it).second.GetXCenter() - myPlayer.GetXCenter());
-			(*it).second.SetYCenter((*it).second.GetYCenter() - myPlayer.GetYCenter());
+			float xMovement = (*it).second.GetXCenter() - myPlayer.GetXCenter();
+			float yMovement = (*it).second.GetYCenter() - myPlayer.GetYCenter();
+		
+			(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement /150);
+			(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement/150);
 		}
 		//check if in collition with Player
 		if ((myPlayer.GetXCenter() - create.GetXCenter())*(myPlayer.GetXCenter() - create.GetXCenter())+ 
@@ -287,14 +290,14 @@ void processKeys()
 		//check to see if out of bounds
 		if (myPlayer.GetXCenter()-0.01f-myPlayer.GetRadius() > -xMax) {
 			//scale the speed based on the time between frames to obtain distance to move this frame.
-			myPlayer.SetXCenter((myPlayer.GetXCenter() - 0.01f));
+			myPlayer.SetXCenter((myPlayer.GetXCenter() - 0.1f));
 		}
 	}
 	if (Right)
 	{
 		//check: make sure in bounds
 		if (myPlayer.GetXCenter() + 0.01f + myPlayer.GetRadius() < xMax) {
-			myPlayer.SetXCenter((myPlayer.GetXCenter() + 0.01f));
+			myPlayer.SetXCenter((myPlayer.GetXCenter() + 0.1f));
 			//XRedSquare += 10.0 * fDeltaTime;
 		}
 	}
@@ -302,7 +305,7 @@ void processKeys()
 	{
 		//check: make sure in bounds
 		if (myPlayer.GetYCenter() + 0.01f + myPlayer.GetRadius() < yMax) {
-			myPlayer.SetYCenter((myPlayer.GetYCenter() + 0.01f));
+			myPlayer.SetYCenter((myPlayer.GetYCenter() + 0.1f));
 			//YRedSquare += 10.0 * fDeltaTime;
 		}
 		
@@ -311,7 +314,7 @@ void processKeys()
 	{
 		//Check: make sure in bounds
 		if (myPlayer.GetYCenter() - 0.01f - myPlayer.GetRadius() > -yMax) {
-			myPlayer.SetYCenter((myPlayer.GetYCenter() - 0.01f));
+			myPlayer.SetYCenter((myPlayer.GetYCenter() - 0.1f));
 			//YRedSquare -= 10.0 * fDeltaTime;
 		}
 		
