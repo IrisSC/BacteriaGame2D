@@ -167,6 +167,43 @@ void display()
 		BadBacteria create = (*it).second;
 		float xLocation = create.GetXCenter();
 		//cout << xLocation;
+		// check if Bad Bacteria is close enough to player to run away
+		if ((myPlayer.GetXCenter() - create.GetXCenter()) * (myPlayer.GetXCenter() - create.GetXCenter()) +
+			(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) <
+			(myPlayer.GetRadius() + create.GetRadius()) * (myPlayer.GetRadius() + create.GetRadius()) + 100) {
+			//BB move away
+			float xMovement = (*it).second.GetXCenter() - myPlayer.GetXCenter();
+			float yMovement = (*it).second.GetYCenter() - myPlayer.GetYCenter();
+			if ((*it).second.GetXCenter() < xMax-2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
+				(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement /150);
+			}
+			if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
+				(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement/150);
+			}
+		}
+		bool getNext = false;
+		for (map<int, BadBacteria>::iterator it2 = it; it2 != enemies.end(); it2++) {
+			if (getNext == false) {
+				getNext = true;
+			}
+			else {
+				//cout << "inside second for loop" << (*it2).first;
+				//check if it is in contact with any niebors, if so move
+				BadBacteria next = (*it2).second;
+				if ((next.GetXCenter() - create.GetXCenter()) * (next.GetXCenter() - create.GetXCenter()) +
+					(next.GetYCenter() - create.GetYCenter()) * (next.GetYCenter() - create.GetYCenter()) <
+					(next.GetRadius() + create.GetRadius()) * (next.GetRadius() + create.GetRadius())) {
+					float xMovement = (*it).second.GetXCenter() - next.GetXCenter();
+					float yMovement = (*it).second.GetYCenter() - next.GetYCenter();
+					if ((*it).second.GetXCenter() < xMax - 2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
+						(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement / 150);
+					}
+					if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
+						(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement / 150);
+					}
+				}
+			}
+		}
 		//check if in collition with Player
 		if ((myPlayer.GetXCenter() - create.GetXCenter())*(myPlayer.GetXCenter() - create.GetXCenter())+ 
 			(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) < 
@@ -302,14 +339,14 @@ void processKeys()
 		//check to see if out of bounds
 		if (myPlayer.GetXCenter()-0.01f-myPlayer.GetRadius() > -xMax) {
 			//scale the speed based on the time between frames to obtain distance to move this frame.
-			myPlayer.SetXCenter((myPlayer.GetXCenter() - 0.01f));
+			myPlayer.SetXCenter((myPlayer.GetXCenter() - 0.1f));
 		}
 	}
 	if (Right)
 	{
 		//check: make sure in bounds
 		if (myPlayer.GetXCenter() + 0.01f + myPlayer.GetRadius() < xMax) {
-			myPlayer.SetXCenter((myPlayer.GetXCenter() + 0.01f));
+			myPlayer.SetXCenter((myPlayer.GetXCenter() + 0.1f));
 			//XRedSquare += 10.0 * fDeltaTime;
 		}
 	}
@@ -317,7 +354,7 @@ void processKeys()
 	{
 		//check: make sure in bounds
 		if (myPlayer.GetYCenter() + 0.01f + myPlayer.GetRadius() < yMax) {
-			myPlayer.SetYCenter((myPlayer.GetYCenter() + 0.01f));
+			myPlayer.SetYCenter((myPlayer.GetYCenter() + 0.1f));
 			//YRedSquare += 10.0 * fDeltaTime;
 		}
 		
@@ -326,7 +363,7 @@ void processKeys()
 	{
 		//Check: make sure in bounds
 		if (myPlayer.GetYCenter() - 0.01f - myPlayer.GetRadius() > -yMax) {
-			myPlayer.SetYCenter((myPlayer.GetYCenter() - 0.01f));
+			myPlayer.SetYCenter((myPlayer.GetYCenter() - 0.1f));
 			//YRedSquare -= 10.0 * fDeltaTime;
 		}
 		
