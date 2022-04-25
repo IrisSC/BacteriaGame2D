@@ -169,6 +169,29 @@ void display()
 				(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement/150);
 			}
 		}
+		bool getNext = false;
+		for (map<int, BadBacteria>::iterator it2 = it; it2 != enemies.end(); it2++) {
+			if (getNext == false) {
+				getNext = true;
+			}
+			else {
+				//cout << "inside second for loop" << (*it2).first;
+				//check if it is in contact with any niebors, if so move
+				BadBacteria next = (*it2).second;
+				if ((next.GetXCenter() - create.GetXCenter()) * (next.GetXCenter() - create.GetXCenter()) +
+					(next.GetYCenter() - create.GetYCenter()) * (next.GetYCenter() - create.GetYCenter()) <
+					(next.GetRadius() + create.GetRadius()) * (next.GetRadius() + create.GetRadius())) {
+					float xMovement = (*it).second.GetXCenter() - next.GetXCenter();
+					float yMovement = (*it).second.GetYCenter() - next.GetYCenter();
+					if ((*it).second.GetXCenter() < xMax - 2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
+						(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement / 150);
+					}
+					if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
+						(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement / 150);
+					}
+				}
+			}
+		}
 		//check if in collition with Player
 		if ((myPlayer.GetXCenter() - create.GetXCenter())*(myPlayer.GetXCenter() - create.GetXCenter())+ 
 			(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) < 
