@@ -162,9 +162,12 @@ void display()
 			//BB move away
 			float xMovement = (*it).second.GetXCenter() - myPlayer.GetXCenter();
 			float yMovement = (*it).second.GetYCenter() - myPlayer.GetYCenter();
-		
-			(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement /150);
-			(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement/150);
+			if ((*it).second.GetXCenter() < xMax-2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
+				(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement /150);
+			}
+			if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
+				(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement/150);
+			}
 		}
 		//check if in collition with Player
 		if ((myPlayer.GetXCenter() - create.GetXCenter())*(myPlayer.GetXCenter() - create.GetXCenter())+ 
