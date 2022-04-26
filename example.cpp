@@ -129,7 +129,7 @@ void display()
 	myRedSquare.Render(myShader, redTransform, ProjectionMatrix);
 
 	//replicate Bad Bacteria
-	if (timeToReplicate == 10000) {
+	if (timeToReplicate == 2000) {
 		//creates the new Bad Bacteria and adds them to a map
 		map<int, BadBacteria> enemiesTemp;
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
@@ -141,10 +141,11 @@ void display()
 		for (map<int, BadBacteria>::iterator it = enemiesTemp.begin(); it != enemiesTemp.end(); it++) {
 			BadBacteria tempBB = (*it).second;
 			int tempNum = (*it).first;
-			enemies.insert(std::pair<int, BadBacteria>(tempNum, tempBB));
+			//renders the Bad Bacteria
 			float red[3] = { 1, 0, 0 };
 			tempBB.SetRadius(2.0f);
 			tempBB.Init(myShader, red);
+			enemies.insert(std::pair<int, BadBacteria>(tempNum, tempBB));
 		}
 		//resets the frames to replace
 		timeToReplicate = 0;
@@ -152,7 +153,7 @@ void display()
 	else {
 		//increases time to replaces by one
 		timeToReplicate++;
-		//cout << timeToReplicate << "  ";
+		cout << timeToReplicate << "  ";
 	}
 
 	//Set the modelview transform for the emeny bacteria
@@ -169,10 +170,10 @@ void display()
 			float xMovement = (*it).second.GetXCenter() - myPlayer.GetXCenter();
 			float yMovement = (*it).second.GetYCenter() - myPlayer.GetYCenter();
 			if ((*it).second.GetXCenter() < xMax-2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
-				(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement /150);
+				(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement /10000);
 			}
 			if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
-				(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement/150);
+				(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement/10000);
 			}
 		}
 		bool getNext = false;
@@ -190,10 +191,10 @@ void display()
 					float xMovement = (*it).second.GetXCenter() - next.GetXCenter();
 					float yMovement = (*it).second.GetYCenter() - next.GetYCenter();
 					if ((*it).second.GetXCenter() < xMax - 2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
-						(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement / 10000);
+						(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement / 150);
 					}
 					if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
-						(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement / 10000);
+						(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement / 150);
 					}
 				}
 			}
