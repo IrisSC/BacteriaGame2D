@@ -16,6 +16,7 @@ using namespace std;
 #include "Circle.h"
 #include "Player.h"
 #include "BadBacteria.h"
+#include "Sprite.h"
 
 #include <map>
 #include <list>
@@ -25,6 +26,7 @@ using namespace std;
 #include <ctime>
 
 #include <iostream>
+
 using namespace std;
 
 /*Variables for game Boundry*/
@@ -45,6 +47,7 @@ int screenWidth = 500, screenHeight = 480;
 
 Square myRedSquare, myGreenSquare;
 Shader myShader;
+Sprite background;
 Player myPlayer;
 map<int, BadBacteria> enemies;
 BadBacteria enemy1(5.0f, 5.0f);
@@ -120,6 +123,15 @@ void display()
 	//ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(-myPlayer.GetXCenter(), -myPlayer.GetYCenter(), 0.0));
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(-xCamera, -yCamera, 0.0));
 
+	//render the background
+	background.Render(myShader, ViewMatrix, ProjectionMatrix);
+
+	//set the modelViewMatrix for the player circle
+	glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
+	glEnable(GL_BLEND);
+		myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
+	glDisable(GL_BLEND);
+
 	//set the modelviewmatrix for the green square
 	/*glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(XGreenSquare, YGreenSquare, 0.0));
 	myGreenSquare.Render(myShader, ModelViewMatrix, ProjectionMatrix);*/
@@ -144,7 +156,7 @@ void display()
 			enemies.insert(std::pair<int, BadBacteria>(tempNum, tempBB));
 			float red[3] = { 1, 0, 0 };
 			tempBB.SetRadius(2.0f);
-			tempBB.Init(myShader, red);
+			tempBB.Init(myShader, red, "textures/BadBacteriaTransparent.png");
 		}
 		//resets the frames to replace
 		timeToReplicate = 0;
@@ -212,7 +224,9 @@ void display()
 		}
 		else {
 			glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(create.GetXCenter(), create.GetYCenter(), 0.0));
-			create.Render(myShader, enemyTransform, ProjectionMatrix);
+			glEnable(GL_BLEND);
+				create.Render(myShader, enemyTransform, ProjectionMatrix);
+			glDisable(GL_BLEND);
 		}
 		
 	}
@@ -221,10 +235,6 @@ void display()
 		enemies.erase(erase);
 		erase = -1;
 	}
-
-	//set the modelViewMatrix for the player circle
-	glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
-	myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
 
 	glutSwapBuffers();
 
@@ -236,17 +246,32 @@ void display()
 
 void init()
 {
-	glClearColor(1.0, 1.0, 1.0, 0.0);						//sets the clear colour to black
-
-	if (!myShader.load("Basic", "./glslfiles/basicTransformations.vert", "./glslfiles/basicTransformations.frag"))
+	if (!myShader.load("Basic", "./glslfiles/basicTexture.vert", "./glslfiles/basicTexture.frag"))
 	{
 		std::cout << "failed to load shader" << std::endl;
 	}
+
+
+	glClearColor(1.0, 1.0, 1.0, 0.0);						//sets the clear colour to black
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+	/*if (!myShader.load("Basic", "./glslfiles/basicTransformations.vert", "./glslfiles/basicTransformations.frag"))
+	{
+		std::cout << "failed to load shader" << std::endl;
+	}*/
+	
 
 	myRedSquare.SetSideSize(4.0f);
 	float red[3] = { 1,0,0 };
 	myRedSquare.Init(myShader, red);
 
+
+	//create background
+	background.SetWidth(xMax*2.0f);
+	background.SetHeight(yMax*2.0f);
+	background.Init(myShader, red, "textures/Background.png");
+	
 	/*myGreenSquare.SetSideSize(3.0f);
 	float green[3] = { 0,1,0 };
 	myGreenSquare.Init(myShader, green);*/
@@ -254,28 +279,29 @@ void init()
 	//add the Player
 	myPlayer.SetRadius(4.0f);
 	float green[3] = { 0, 1, 0 };
-	myPlayer.Init(myShader, green);
+	
+	myPlayer.Init(myShader, green, "textures/Player2Transparent2.png");
 	
 	//add the enemies
 	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
 		//cout << "inside init loop" << (*it).second.GetXCenter();
 		(*it).second.SetRadius(2.0f);
-		(*it).second.Init(myShader, red);
+		(*it).second.Init(myShader, red, "textures/BadBacteriaTransparent.png");
 	}
 	
 	enemy1.SetRadius(2.0f);
-	enemy1.Init(myShader, red);
-
+	enemy1.Init(myShader, red, "textures/BadBacteriaTransparent.png");
+	
 	//enemy2.SetRadius(2.0f);
 	//enemy2.Init(myShader, red);
 }
 
 //render new Bad Bacteria
-void initNewBB(BadBacteria newBB) {
+/*void initNewBB(BadBacteria newBB) {
 	float red[3] = { 1,0,0 };
 	newBB.SetRadius(2.0f);
 	newBB.Init(myShader, red);
-}
+}*/
 
 void special(int key, int x, int y)
 {
