@@ -129,23 +129,27 @@ void display()
 
 	//replicate Bad Bacteria
 	if (timeToReplicate == 2000) {
-		BadBacteria enemy5(num, -5.0f);
-		enemies.insert(std::pair<float, BadBacteria>(numAddBB, enemy5));
-
-		/*for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
-			BadBacteria newBB((*it).second.GetXCenter() + 1.0f, (*it).second.GetYCenter() + 1.0f);
-			enemies.insert(std::pair<float, BadBacteria>(numAddBB, newBB));
+		//creates the new Bad Bacteria and adds them to a map
+		map<int, BadBacteria> enemiesTemp;
+		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
+			BadBacteria enemyN((*it).second.GetXCenter() + 1.0f, (*it).second.GetYCenter() + 1.0f);
+			cout << "after creation";
+			enemiesTemp.insert(std::pair<int, BadBacteria>(numAddBB, enemyN)); //not sure what the issue is with this line
+			cout << "after adding";
 			numAddBB++;
 		}
+		//transfers the bad bacteria from the temperary map to the enemies map
+		for (map<int, BadBacteria>::iterator it = enemiesTemp.begin(); it != enemiesTemp.end(); it++) {
+			BadBacteria tempBB = (*it).second;
+			int tempNum = (*it).first;
+			enemies.insert(std::pair<int, BadBacteria>(tempNum, tempBB));
+		}
+		//resets the frames to replace
 		timeToReplicate = 0;
-		*/
-		numAddBB = num + 3;
-		timeToReplicate = 0;
-		num = num + 1.0f;
 	}
 	else {
+		//increases time to replaces by one
 		timeToReplicate++;
-		cout << timeToReplicate << "  ";
 	}
 
 	//Set the modelview transform for the emeny bacteria
@@ -301,9 +305,9 @@ void idle()
 // FREEGLUT WINDOW SET UP
 int main(int argc, char** argv)
 {
-	enemies.insert(std::pair<float, BadBacteria>(1, enemy1));
-	enemies.insert(std::pair<float, BadBacteria>(2, enemy2));
-	enemies.insert(std::pair<float, BadBacteria>(3, enemy3));
+	enemies.insert(std::pair<int, BadBacteria>(1, enemy1));
+	enemies.insert(std::pair<int, BadBacteria>(2, enemy2));
+	enemies.insert(std::pair<int, BadBacteria>(3, enemy3));
 
 	//replicate Bad Bacteria
 	/*if (timeToReplicate >= 200) {
