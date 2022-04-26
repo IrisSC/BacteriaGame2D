@@ -156,7 +156,7 @@ void display()
 			enemies.insert(std::pair<int, BadBacteria>(tempNum, tempBB));
 			float red[3] = { 1, 0, 0 };
 			tempBB.SetRadius(2.0f);
-			tempBB.Init(myShader, red);
+			tempBB.Init(myShader, red, "textures/BadBacteriaTransparent.png");
 		}
 		//resets the frames to replace
 		timeToReplicate = 0;
@@ -224,7 +224,9 @@ void display()
 		}
 		else {
 			glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(create.GetXCenter(), create.GetYCenter(), 0.0));
-			create.Render(myShader, enemyTransform, ProjectionMatrix);
+			glEnable(GL_BLEND);
+				create.Render(myShader, enemyTransform, ProjectionMatrix);
+			glDisable(GL_BLEND);
 		}
 		
 	}
@@ -284,22 +286,22 @@ void init()
 	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
 		//cout << "inside init loop" << (*it).second.GetXCenter();
 		(*it).second.SetRadius(2.0f);
-		(*it).second.Init(myShader, red);
+		(*it).second.Init(myShader, red, "textures/BadBacteriaTransparent.png");
 	}
 	
 	enemy1.SetRadius(2.0f);
-	enemy1.Init(myShader, red);
+	enemy1.Init(myShader, red, "textures/BadBacteriaTransparent.png");
 	
 	//enemy2.SetRadius(2.0f);
 	//enemy2.Init(myShader, red);
 }
 
 //render new Bad Bacteria
-void initNewBB(BadBacteria newBB) {
+/*void initNewBB(BadBacteria newBB) {
 	float red[3] = { 1,0,0 };
 	newBB.SetRadius(2.0f);
 	newBB.Init(myShader, red);
-}
+}*/
 
 void special(int key, int x, int y)
 {

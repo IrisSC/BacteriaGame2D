@@ -1,4 +1,5 @@
 #include "BadBacteria.h";
+#include "ImageLoading.h"
 
 #include "shaders\Shader.h"
 
@@ -58,14 +59,39 @@ int BadBacteria::GetHealth() {
 	return health;
 }
 
-void BadBacteria::Init(Shader& shader, float colour[3])
+void BadBacteria::Init(Shader& shader, float colour[3], std::string filename)
 {
+	//load png image
+	int imageHeight = 0;
+	int imageWidth = 0;
+
+	//create the texture on the GPU
+	glGenTextures(1, &m_TexName);
+	glBindTexture(GL_TEXTURE_2D, m_TexName);
+
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);  //or use GL_CLAMP
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	bool success = ImageLoading::loadImage(filename);
+	if (!success) {
+		std::cout << "Unable to load image file for Player" << std::endl;
+		glDeleteTextures(1, &m_TexName);
+		return;
+	}
+	else
+	{
+		std::cout << "Image loaded " << std::endl;
+	}
 
 	//Create the geometry
 	double step = 10;
-	float size = (int)((360.0 / step) + 1) * 3;
-	float* vert = new float[size];
-	float* col = new float[size];
+	float size = (int)((360.0 / step) + 1);
+	float* vert = new float[size * 3];
+	float* col = new float[size * 3];
+	float* tex = new float[size * 2];
 
 	m_NumOfVerts = 0;
 	for (double i = 0; i <= 360; i += step)
@@ -80,6 +106,8 @@ void BadBacteria::Init(Shader& shader, float colour[3])
 		col[m_NumOfVerts * 3 + 1] = colour[1];
 		col[m_NumOfVerts * 3 + 2] = colour[2];
 
+		tex[m_NumOfVerts * 2] = 0.5 + 0.5 * cos(glm::radians(i));
+		tex[m_NumOfVerts * 2 + 1] = 0.5 + 0.5 * sin(glm::radians(i));
 
 		m_NumOfVerts++;
 	}
@@ -90,7 +118,7 @@ void BadBacteria::Init(Shader& shader, float colour[3])
 	// First VAO setup
 	glBindVertexArray(m_vaoID);
 
-	glGenBuffers(2, m_vboID); // we need two VBOs - one for the vertices and one for the colours
+	glGenBuffers(2, m_vboID); // we need three VBOs - one for the vertices, one for the colours, and one for the textures
 
 	//Lets set up the vertices.
 	glBindBuffer(GL_ARRAY_BUFFER, m_vboID[0]);
@@ -113,6 +141,16 @@ void BadBacteria::Init(Shader& shader, float colour[3])
 	//location in shader, number of componentns,  type, normalised, stride, pointer to first attribute
 	glVertexAttribPointer(colorLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+	//Now set up the texture coordinates
+	glBindBuffer(GL_ARRAY_BUFFER, m_vboID[2]);
+	glBufferData(GL_ARRAY_BUFFER, m_NumOfVerts * 3 * sizeof(GLfloat), tex, GL_STATIC_DRAW);
+
+	//set the texture coords - linked to the texcoord shader input.
+	GLint texLocation = glGetAttribLocation(shader.handle(), "in_TexCoord");
+	glEnableVertexAttribArray(texLocation);
+	//location in shader, number of componentns,  type, normalised, stride, pointer to first attribute
+	glVertexAttribPointer(texLocation, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
 	//good practice to bind to 0.
 	glEnableVertexAttribArray(0);
 
@@ -128,11 +166,12 @@ void BadBacteria::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& 
 
 	//pass the uniform for the ModelView matrix to the shader
 	glUniformMatrix4fv(glGetUniformLocation(shader.handle(), "ModelViewMatrix"), 1, GL_FALSE, &ModelViewMatrix[0][0]);
-
+	glBindTexture(GL_TEXTURE_2D, m_TexName);
 	//Draw the object
-	glPointSize(5.0);
+	//glPointSize(5.0);
 	glBindVertexArray(m_vaoID);		// select first VAO
-	glDrawArrays(GL_POINTS, 0, m_NumOfVerts);	// draw first object
+	glDrawArrays(GL_TRIANGLE_FAN, 0, m_NumOfVerts);	// draw first object
+	//glDrawArrays(GL_POINTS, 0, m_NumOfVerts);	// draw first object
 
 	glBindVertexArray(0); //unbind the vertex array object
 	glUseProgram(0); //turn off the current shader
