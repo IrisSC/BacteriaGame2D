@@ -134,9 +134,7 @@ void display()
 		map<int, BadBacteria> enemiesTemp;
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
 			BadBacteria enemyN((*it).second.GetXCenter() + 1.0f, (*it).second.GetYCenter() + 1.0f);
-			cout << "after creation";
-			enemiesTemp.insert(std::pair<int, BadBacteria>(numAddBB, enemyN)); //not sure what the issue is with this line
-			cout << "after adding";
+			enemiesTemp.insert(std::pair<int, BadBacteria>(numAddBB, enemyN));
 			numAddBB++;
 		}
 		//transfers the bad bacteria from the temperary map to the enemies map
@@ -192,10 +190,10 @@ void display()
 					float xMovement = (*it).second.GetXCenter() - next.GetXCenter();
 					float yMovement = (*it).second.GetYCenter() - next.GetYCenter();
 					if ((*it).second.GetXCenter() < xMax - 2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
-						(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement / 150);
+						(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement / 10000);
 					}
 					if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
-						(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement / 150);
+						(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement / 10000);
 					}
 				}
 			}
@@ -324,14 +322,14 @@ void processKeys()
 		//check to see if out of bounds
 		if (myPlayer.GetXCenter()-0.01f-myPlayer.GetRadius() > -xMax) {
 			//scale the speed based on the time between frames to obtain distance to move this frame.
-			myPlayer.SetXCenter((myPlayer.GetXCenter() - 0.1f));
+			myPlayer.SetXCenter((myPlayer.GetXCenter() - 0.01f));
 		}
 	}
 	if (Right)
 	{
 		//check: make sure in bounds
 		if (myPlayer.GetXCenter() + 0.01f + myPlayer.GetRadius() < xMax) {
-			myPlayer.SetXCenter((myPlayer.GetXCenter() + 0.1f));
+			myPlayer.SetXCenter((myPlayer.GetXCenter() + 0.01f));
 			//XRedSquare += 10.0 * fDeltaTime;
 		}
 	}
@@ -339,7 +337,7 @@ void processKeys()
 	{
 		//check: make sure in bounds
 		if (myPlayer.GetYCenter() + 0.01f + myPlayer.GetRadius() < yMax) {
-			myPlayer.SetYCenter((myPlayer.GetYCenter() + 0.1f));
+			myPlayer.SetYCenter((myPlayer.GetYCenter() + 0.01f));
 			//YRedSquare += 10.0 * fDeltaTime;
 		}
 		
@@ -348,7 +346,7 @@ void processKeys()
 	{
 		//Check: make sure in bounds
 		if (myPlayer.GetYCenter() - 0.01f - myPlayer.GetRadius() > -yMax) {
-			myPlayer.SetYCenter((myPlayer.GetYCenter() - 0.1f));
+			myPlayer.SetYCenter((myPlayer.GetYCenter() - 0.01f));
 			//YRedSquare -= 10.0 * fDeltaTime;
 		}
 		
