@@ -18,6 +18,8 @@ private:
 
 	float xCenter;
 	float yCenter;
+
+	GLuint m_TexName; //identifier for the texture
 public:
 	BadBacteria();
 	BadBacteria(float x, float y);
@@ -30,6 +32,6 @@ public:
 	float GetYCenter();
 	int GetHealth();
 
-	void Init(Shader& shader, float colour[3]);
+	void Init(Shader& shader, float colour[3],std::string filename);
 	void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix);
 };
