@@ -129,7 +129,7 @@ void display()
 	myRedSquare.Render(myShader, redTransform, ProjectionMatrix);
 
 	//replicate Bad Bacteria
-	if (timeToReplicate == 2000) {
+	if (timeToReplicate == 20000) {
 		//creates the new Bad Bacteria and adds them to a map
 		map<int, BadBacteria> enemiesTemp;
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
