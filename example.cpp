@@ -94,7 +94,7 @@ void reshape(int width, int height)		// Resize the OpenGL window
 void display()
 { 
 	//initials the objects for rendering 
-	init();
+	//init();
 	//BadBacteria enemy1(5.0f, 5.0f);
 	//obtain the ticks from the clock and find difference with previous time.
 	currentTicks = std::clock();
@@ -128,7 +128,7 @@ void display()
 	myRedSquare.Render(myShader, redTransform, ProjectionMatrix);
 
 	//replicate Bad Bacteria
-	if (timeToReplicate == 2000) {
+	if (timeToReplicate == 10000) {
 		//creates the new Bad Bacteria and adds them to a map
 		map<int, BadBacteria> enemiesTemp;
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
@@ -143,6 +143,9 @@ void display()
 			BadBacteria tempBB = (*it).second;
 			int tempNum = (*it).first;
 			enemies.insert(std::pair<int, BadBacteria>(tempNum, tempBB));
+			float red[3] = { 1, 0, 0 };
+			tempBB.SetRadius(2.0f);
+			tempBB.Init(myShader, red);
 		}
 		//resets the frames to replace
 		timeToReplicate = 0;
@@ -344,7 +347,7 @@ int main(int argc, char** argv)
 	cout << OpenGLVersion[0] << " " << OpenGLVersion[1] << endl;
 
 	//initialise the objects for rendering
-	//init();
+	init();
 
 	//specify which function will be called to refresh the screen.
 	glutDisplayFunc(display);
