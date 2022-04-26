@@ -143,7 +143,7 @@ void Player::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& Proje
 
 	//pass the uniform for the ModelView matrix to the shader
 	glUniformMatrix4fv(glGetUniformLocation(shader.handle(), "ModelViewMatrix"), 1, GL_FALSE, &ModelViewMatrix[0][0]);
-
+	glBindTexture(GL_TEXTURE_2D, m_TexName);
 	//Draw the object
 	//glPointSize(5.0);
 	glBindVertexArray(m_vaoID);		// select first VAO
