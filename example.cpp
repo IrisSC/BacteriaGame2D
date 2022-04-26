@@ -170,10 +170,10 @@ void display()
 			float xMovement = (*it).second.GetXCenter() - myPlayer.GetXCenter();
 			float yMovement = (*it).second.GetYCenter() - myPlayer.GetYCenter();
 			if ((*it).second.GetXCenter() < xMax-2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
-				(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement /10000);
+				(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement /2000);
 			}
 			if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
-				(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement/10000);
+				(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement/2000);
 			}
 		}
 		bool getNext = false;
@@ -191,10 +191,10 @@ void display()
 					float xMovement = (*it).second.GetXCenter() - next.GetXCenter();
 					float yMovement = (*it).second.GetYCenter() - next.GetYCenter();
 					if ((*it).second.GetXCenter() < xMax - 2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
-						(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement / 150);
+						(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement / 500);
 					}
 					if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
-						(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement / 150);
+						(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement / 500);
 					}
 				}
 			}
