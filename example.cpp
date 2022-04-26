@@ -251,7 +251,7 @@ void init()
 
 
 	glClearColor(1.0, 1.0, 1.0, 0.0);						//sets the clear colour to black
-
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 	/*if (!myShader.load("Basic", "./glslfiles/basicTransformations.vert", "./glslfiles/basicTransformations.frag"))
@@ -266,9 +266,9 @@ void init()
 
 
 	//create background
-	background.SetWidth(10.0f);
-	background.SetHeight(10.0f);
-	background.Init(myShader, red, "textures/sky.png");
+	background.SetWidth(xMax*2.0f);
+	background.SetHeight(yMax*2.0f);
+	background.Init(myShader, red, "textures/Background.png");
 	
 	/*myGreenSquare.SetSideSize(3.0f);
 	float green[3] = { 0,1,0 };
@@ -277,7 +277,8 @@ void init()
 	//add the Player
 	myPlayer.SetRadius(4.0f);
 	float green[3] = { 0, 1, 0 };
-	myPlayer.Init(myShader, green, "textures/Background.png");
+	
+	myPlayer.Init(myShader, green, "textures/Player2Transparent2.png");
 	
 	//add the enemies
 	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {

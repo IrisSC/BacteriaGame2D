@@ -47,6 +47,7 @@ void Player::Init(Shader& shader, float colour[3], std::string filename) {
 	//create the texture on the GPU
 	glGenTextures(1, &m_TexName);
 	glBindTexture(GL_TEXTURE_2D, m_TexName);
+	
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);  //or use GL_CLAMP
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
@@ -84,8 +85,8 @@ void Player::Init(Shader& shader, float colour[3], std::string filename) {
 		col[m_NumOfVerts * 3 + 1] = colour[1];
 		col[m_NumOfVerts * 3 + 2] = colour[2];
 
-		tex[m_NumOfVerts * 2] = xcoord/10;
-		tex[m_NumOfVerts * 2 + 1] = ycoord/10;
+		tex[m_NumOfVerts * 2] = 0.5+0.5*cos(glm::radians(i));
+		tex[m_NumOfVerts * 2 + 1] = 0.5 + 0.5 * sin(glm::radians(i));
 
 		m_NumOfVerts++;
 	}
