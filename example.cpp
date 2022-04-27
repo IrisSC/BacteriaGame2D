@@ -354,7 +354,7 @@ void init()
 	//add bacteria num bar
 	numBar.SetWidth(1.0f);
 	numBar.SetHeight(2.0f);
-	numBar.Init(myShader, green, "textures/sky.png", 1.0, 1.0);
+	numBar.Init(myShader, green, "textures/green2.png", 1.0, 1.0);
 	
 	//add the enemies
 	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
