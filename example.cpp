@@ -47,7 +47,7 @@ int screenWidth = 500, screenHeight = 480;
 
 Square myRedSquare, myGreenSquare;
 Shader myShader;
-Sprite background, startScreen;
+Sprite background, startScreen, endCongrats, endDeath;
 Player myPlayer;
 map<int, BadBacteria> enemies;
 BadBacteria enemy1(5.0f, 5.0f);
@@ -61,6 +61,8 @@ float num = -5.0f;
 
 //determines wether the start/end screens will display
 bool startScreenShow = true;
+bool endCongratsShow = false;
+bool endDeathShow = false;
 
 //Variables for the positions of the squares
 float XRedSquare = -50.0f;
@@ -133,8 +135,15 @@ void display()
 		startScreen.Render(myShader, startScreenTransform, ProjectionMatrix);
 	}
 
+	//check if the congradulations end screen should display
+	if (endCongratsShow) {
+		//display the congradulations end screen
+		glm::mat4 endScreenCongratsTransform = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
+		endCongrats.Render(myShader, endScreenCongratsTransform, ProjectionMatrix);
+	}
+
 	//check if the game should be displayed
-	if (!startScreenShow) {
+	if (!startScreenShow && !endCongratsShow) {
 		//render the background
 		background.Render(myShader, ViewMatrix, ProjectionMatrix);
 
@@ -251,6 +260,9 @@ void display()
 		}
 	}
 	
+	if (enemies.size() <= 0) {
+		endCongratsShow = true;
+	}
 
 	glutSwapBuffers();
 
@@ -292,6 +304,11 @@ void init()
 	startScreen.SetWidth(60);
 	startScreen.SetHeight(60);
 	startScreen.Init(myShader, red, "textures/StartScreen3.png", 1.0, 1.0);
+
+	//create congrats end screen
+	endCongrats.SetWidth(60);
+	endCongrats.SetHeight(60);
+	endCongrats.Init(myShader, red, "textures/EndScreenCongrats1.png", 1.0, 1.0);
 	
 	/*myGreenSquare.SetSideSize(3.0f);
 	float green[3] = { 0,1,0 };
@@ -431,8 +448,8 @@ void idle()
 int main(int argc, char** argv)
 {
 	enemies.insert(std::pair<int, BadBacteria>(1, enemy1));
-	enemies.insert(std::pair<int, BadBacteria>(2, enemy2));
-	enemies.insert(std::pair<int, BadBacteria>(3, enemy3));
+	//enemies.insert(std::pair<int, BadBacteria>(2, enemy2));
+	//enemies.insert(std::pair<int, BadBacteria>(3, enemy3));
 
 	//replicate Bad Bacteria
 	/*if (timeToReplicate >= 200) {
