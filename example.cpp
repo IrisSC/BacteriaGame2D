@@ -47,7 +47,7 @@ int screenWidth = 500, screenHeight = 480;
 
 Square myRedSquare, myGreenSquare;
 Shader myShader;
-Sprite background, startScreen;
+Sprite background, startScreen, endCongrats, endDeath;
 Player myPlayer;
 map<int, BadBacteria> enemies;
 BadBacteria enemy1(5.0f, 5.0f);
@@ -61,6 +61,8 @@ float num = -5.0f;
 
 //determines wether the start/end screens will display
 bool startScreenShow = true;
+bool endCongratsShow = false;
+bool endDeathShow = false;
 
 //Variables for the positions of the squares
 float XRedSquare = -50.0f;
@@ -133,8 +135,22 @@ void display()
 		startScreen.Render(myShader, startScreenTransform, ProjectionMatrix);
 	}
 
+	//check if the congradulations end screen should display
+	if (endCongratsShow) {
+		//display the congradulations end screen
+		glm::mat4 endScreenCongratsTransform = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
+		endCongrats.Render(myShader, endScreenCongratsTransform, ProjectionMatrix);
+	}
+
+	//check if the death end screen should be displayed
+	if (endDeathShow) {
+		//display the death end screen
+		glm::mat4 endScreenDeathTransform = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
+		endDeath.Render(myShader, endScreenDeathTransform, ProjectionMatrix);
+	}
+
 	//check if the game should be displayed
-	if (!startScreenShow) {
+	if (!startScreenShow && !endCongratsShow && !endDeathShow) {
 		//render the background
 		background.Render(myShader, ViewMatrix, ProjectionMatrix);
 
@@ -251,6 +267,15 @@ void display()
 		}
 	}
 	
+	//check if player has killed all enemies
+	if (enemies.size() <= 0) {
+		endCongratsShow = true;
+	}
+
+	//check if there are too many bacteria
+	if (enemies.size() >= 100) {
+		endDeathShow = true;
+	}
 
 	glutSwapBuffers();
 
@@ -292,6 +317,16 @@ void init()
 	startScreen.SetWidth(60);
 	startScreen.SetHeight(60);
 	startScreen.Init(myShader, red, "textures/StartScreen3.png", 1.0, 1.0);
+
+	//create congrats end screen
+	endCongrats.SetWidth(60);
+	endCongrats.SetHeight(60);
+	endCongrats.Init(myShader, red, "textures/EndScreenCongrats1.png", 1.0, 1.0);
+
+	//create the death end screen
+	endDeath.SetWidth(60);
+	endDeath.SetHeight(60);
+	endDeath.Init(myShader, red, "textures/EndScreen2.png", 1.0, 1.0);
 	
 	/*myGreenSquare.SetSideSize(3.0f);
 	float green[3] = { 0,1,0 };
