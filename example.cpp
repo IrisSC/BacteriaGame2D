@@ -21,6 +21,7 @@ using namespace std;
 #include <map>
 #include <list>
 #include <iterator>
+#include <ctime>
 
 //included for getting time
 #include <ctime>
@@ -50,9 +51,12 @@ Shader myShader;
 Sprite background, startScreen, endCongrats, endDeath, numBar, numBarOutline;
 Player myPlayer;
 map<int, BadBacteria> enemies;
-BadBacteria enemy1(5.0f, 5.0f);
-BadBacteria enemy2(1.0f, 1.0f);
-BadBacteria enemy3(3.0f, 1.0f);
+int xMaxInt = (int)xMax;
+int yMaxInt = (int)yMax;
+//srand(time(NULL));
+BadBacteria enemy1(0.0f, 0.0f);
+BadBacteria enemy2(0.0f, 0.0f);
+BadBacteria enemy3(0.0f, 0.0f); 
 BadBacteria enemy4(0.0f, 0.0f);
 int timeToReplicate = 0;
 int numAddBB = 4;
@@ -95,7 +99,7 @@ void reshape(int width, int height)		// Resize the OpenGL window
 
 	glViewport(0, 0, width, height);						// set Viewport dimensions
 
-	ProjectionMatrix = glm::ortho(-30.0, 30.0, -30.0, 30.0);
+	ProjectionMatrix = glm::ortho(-30.0, 30.0, -30.0, 30.0); 
 }
 
 
@@ -490,9 +494,22 @@ void idle()
 // FREEGLUT WINDOW SET UP
 int main(int argc, char** argv)
 {
+	srand(time(NULL));
+
+	//set the enmies to appear randomly
+	enemy1.SetXCenter((float)(rand() % ((xMaxInt - 2) - (-(xMaxInt - 2))) + -(xMaxInt - 2)));
+	enemy1.SetYCenter((float)(rand() % ((yMaxInt - 2) - (-(yMaxInt - 2))) + -(yMaxInt - 2)));
+	enemy2.SetXCenter((float)(rand() % ((xMaxInt - 2) - (-(xMaxInt - 2))) + -(xMaxInt - 2)));
+	enemy2.SetYCenter((float)(rand() % ((yMaxInt - 2) - (-(yMaxInt - 2))) + -(yMaxInt - 2)));
+	enemy3.SetXCenter((float)(rand() % ((xMaxInt - 2) - (-(xMaxInt - 2))) + -(xMaxInt - 2)));
+	enemy3.SetYCenter((float)(rand() % ((yMaxInt - 2) - (-(yMaxInt - 2))) + -(yMaxInt - 2)));
+
 	enemies.insert(std::pair<int, BadBacteria>(1, enemy1));
+	cout << "X random center: " << rand()%50 << "stop random ";
 	enemies.insert(std::pair<int, BadBacteria>(2, enemy2));
 	enemies.insert(std::pair<int, BadBacteria>(3, enemy3));
+
+	
 
 	//replicate Bad Bacteria
 	/*if (timeToReplicate >= 200) {
