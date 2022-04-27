@@ -26,5 +26,5 @@ public:
 		repeatInT);
 	void SetWidth(float size);
 	void SetHeight(float size);
-	void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix);
+	void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix, int file);
 };

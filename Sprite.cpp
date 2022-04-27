@@ -135,7 +135,7 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename, float r
 	glBindVertexArray(0);
 }
 
-void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix)
+void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix, int file)
 {
 	glUseProgram(shader.handle());  // use the shader
 
@@ -152,7 +152,13 @@ void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& Proje
 
 	//Draw the object
 	glBindVertexArray(m_vaoID);		// select first VAO
-	glDrawArrays(GL_TRIANGLES, 0, m_NumberOfVerts);	// draw first object
+	if (file == 0) {
+		glDrawArrays(GL_LINE_STRIP, 0, m_NumberOfVerts);
+	}
+	else {
+		glDrawArrays(GL_TRIANGLES, 0, m_NumberOfVerts);	// draw first object
+	}
+	
 
 	glBindVertexArray(0); //unbind the vertex array object
 	glUseProgram(0); //turn off the current shader

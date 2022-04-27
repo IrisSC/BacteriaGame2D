@@ -132,34 +132,34 @@ void display()
 	if (startScreenShow) {
 		//display the start screen
 		glm::mat4 startScreenTransform = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
-		startScreen.Render(myShader, startScreenTransform, ProjectionMatrix);
+		startScreen.Render(myShader, startScreenTransform, ProjectionMatrix, 1);
 	}
 
 	//check if the congradulations end screen should display
 	if (endCongratsShow) {
 		//display the congradulations end screen
 		glm::mat4 endScreenCongratsTransform = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
-		endCongrats.Render(myShader, endScreenCongratsTransform, ProjectionMatrix);
+		endCongrats.Render(myShader, endScreenCongratsTransform, ProjectionMatrix, 1);
 	}
 
 	//check if the death end screen should be displayed
 	if (endDeathShow) {
 		//display the death end screen
 		glm::mat4 endScreenDeathTransform = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
-		endDeath.Render(myShader, endScreenDeathTransform, ProjectionMatrix);
+		endDeath.Render(myShader, endScreenDeathTransform, ProjectionMatrix, 1);
 	}
 
 	//check if the game should be displayed
 	if (!startScreenShow && !endCongratsShow && !endDeathShow) {
 		//render the background
-		background.Render(myShader, ViewMatrix, ProjectionMatrix);
+		background.Render(myShader, ViewMatrix, ProjectionMatrix, 1);
 
 		//render number of bacteria bar
 		//numBar.SetWidth(enemies.size());
 		//float green[] = {0,0,1};
 		//numBar.Init(myShader, green, "textures/sky.png", 1.0, 1.0);
-		//glm::mat4 testing = glm::translate(ViewMatrix, glm::vec3(5.0, 5.0, 0.0));
-		//numBar.Render(myShader, testing, ProjectionMatrix);
+		glm::mat4 testing = glm::translate(ViewMatrix, glm::vec3(xCamera - 4.0, yCamera + 28.0, 0.0));
+		numBarOutline.Render(myShader, testing, ProjectionMatrix, 0);
 		//numBar.Render(myShader, ViewMatrix, ProjectionMatrix);
 
 		//set the modelViewMatrix for the player circle
@@ -210,7 +210,7 @@ void display()
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
 			//add to the Bacteria number bar
 			glm::mat4 bar = glm::translate(ViewMatrix, glm::vec3(xCamera + barPlacement, yCamera + 28.0, 0.0));
-			numBar.Render(myShader, bar, ProjectionMatrix);
+			numBar.Render(myShader, bar, ProjectionMatrix, 1);
 			barPlacement = barPlacement + 0.5f;
 			//cout << " inside display for loop ";
 			BadBacteria create = (*it).second;
@@ -355,6 +355,11 @@ void init()
 	numBar.SetWidth(0.5f);
 	numBar.SetHeight(2.0f);
 	numBar.Init(myShader, green, "textures/green2.png", 1.0, 1.0);
+
+	//add the outline for the bacteria number bar
+	numBarOutline.SetWidth(50.0);
+	numBarOutline.SetHeight(2.0);
+	numBarOutline.Init(myShader, green, "textures/green2.png", 1.0, 1.0);
 	
 	//add the enemies
 	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
