@@ -158,8 +158,8 @@ void display()
 		//numBar.SetWidth(enemies.size());
 		//float green[] = {0,0,1};
 		//numBar.Init(myShader, green, "textures/sky.png", 1.0, 1.0);
-		glm::mat4 testing = glm::translate(ViewMatrix, glm::vec3(xCamera - 4.0, yCamera + 28.0, 0.0));
-		numBarOutline.Render(myShader, testing, ProjectionMatrix, 0);
+		//glm::mat4 testing = glm::translate(ViewMatrix, glm::vec3(xCamera - 4.0, yCamera + 28.0, 0.0));
+		//numBarOutline.Render(myShader, testing, ProjectionMatrix, 0);
 		//numBar.Render(myShader, ViewMatrix, ProjectionMatrix);
 
 		//set the modelViewMatrix for the player circle
@@ -208,10 +208,6 @@ void display()
 		float barPlacement = -29.0f;
 		//Set the modelview transform for the emeny bacteria
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
-			//add to the Bacteria number bar
-			glm::mat4 bar = glm::translate(ViewMatrix, glm::vec3(xCamera + barPlacement, yCamera + 28.0, 0.0));
-			numBar.Render(myShader, bar, ProjectionMatrix, 1);
-			barPlacement = barPlacement + 0.5f;
 			//cout << " inside display for loop ";
 			BadBacteria create = (*it).second;
 			float xLocation = create.GetXCenter();
@@ -271,13 +267,19 @@ void display()
 					create.Render(myShader, enemyTransform, ProjectionMatrix);
 				glDisable(GL_BLEND);
 			}
-		
+			//add to the Bacteria number bar
+			glm::mat4 bar = glm::translate(ViewMatrix, glm::vec3(xCamera + barPlacement, yCamera + 28.0, 0.0));
+			numBar.Render(myShader, bar, ProjectionMatrix, 1);
+			barPlacement = barPlacement + 0.5f;
 		}
 		//delete BB whos health is depleted
 		if (erase != -1) {
 			enemies.erase(erase);
 			erase = -1;
 		}
+		//displey the outline for the number bar
+		glm::mat4 testing = glm::translate(ViewMatrix, glm::vec3(xCamera - 4.0, yCamera + 28.0, 0.0));
+		numBarOutline.Render(myShader, testing, ProjectionMatrix, 0);
 	}
 	
 	//check if player has killed all enemies
