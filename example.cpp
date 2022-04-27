@@ -121,128 +121,136 @@ void display()
 	if (!(myPlayer.GetYCenter() <= (-yMax + 15)) && !(myPlayer.GetYCenter() >= (yMax - 30))) {
 		yCamera = myPlayer.GetYCenter();
 	}
+
 	//set the view matrix
 	//ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(-myPlayer.GetXCenter(), -myPlayer.GetYCenter(), 0.0));
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(-xCamera, -yCamera, 0.0));
 
-	//render the background
-	background.Render(myShader, ViewMatrix, ProjectionMatrix);
+	//check if the start screen should be shown
+	if (startScreenShow) {
+		//display the start screen
+		glm::mat4 startScreenTransform = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
+		startScreen.Render(myShader, startScreenTransform, ProjectionMatrix);
+	}
 
-	//set the modelViewMatrix for the player circle
-	glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
-	glEnable(GL_BLEND);
-		myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
-	glDisable(GL_BLEND);
+	//check if the game should be displayed
+	if (!startScreenShow) {
+		//render the background
+		background.Render(myShader, ViewMatrix, ProjectionMatrix);
 
-	//display the start screen
-	glm::mat4 startScreenTransform = glm::translate(ViewMatrix, glm::vec3(-xCamera, -yCamera, 0.0));
-	startScreen.Render(myShader, playerTransform, ProjectionMatrix);
+		//set the modelViewMatrix for the player circle
+		glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
+		glEnable(GL_BLEND);
+			myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
+		glDisable(GL_BLEND);
 
-	//set the modelviewmatrix for the green square
-	/*glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(XGreenSquare, YGreenSquare, 0.0));
-	myGreenSquare.Render(myShader, ModelViewMatrix, ProjectionMatrix);*/
+		//set the modelviewmatrix for the green square
+		/*glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(XGreenSquare, YGreenSquare, 0.0));
+		myGreenSquare.Render(myShader, ModelViewMatrix, ProjectionMatrix);*/
 
-	//Set the modelviewtransform for the red square.
-	glm::mat4 redTransform = glm::translate(ViewMatrix, glm::vec3(XRedSquare, YRedSquare, 0.0));
-	myRedSquare.Render(myShader, redTransform, ProjectionMatrix);
+		//Set the modelviewtransform for the red square.
+		glm::mat4 redTransform = glm::translate(ViewMatrix, glm::vec3(XRedSquare, YRedSquare, 0.0));
+		myRedSquare.Render(myShader, redTransform, ProjectionMatrix);
 
-	//replicate Bad Bacteria
-	if (timeToReplicate == 2000) {
-		//creates the new Bad Bacteria and adds them to a map
-		map<int, BadBacteria> enemiesTemp;
+		//replicate Bad Bacteria
+		if (timeToReplicate == 2000) {
+			//creates the new Bad Bacteria and adds them to a map
+			map<int, BadBacteria> enemiesTemp;
+			for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
+				BadBacteria enemyN((*it).second.GetXCenter() + 1.0f, (*it).second.GetYCenter() + 1.0f);
+				enemiesTemp.insert(std::pair<int, BadBacteria>(numAddBB, enemyN));
+				numAddBB++;
+			}
+			//transfers the bad bacteria from the temperary map to the enemies map
+			for (map<int, BadBacteria>::iterator it = enemiesTemp.begin(); it != enemiesTemp.end(); it++) {
+				BadBacteria tempBB = (*it).second;
+				int tempNum = (*it).first;
+				//renders the Bad Bacteria
+				float red[3] = { 1, 0, 0 };
+				tempBB.SetRadius(2.0f);
+				tempBB.Init(myShader, red, "textures/BadBacteriaTransparent.png");
+
+				enemies.insert(std::pair<int, BadBacteria>(tempNum, tempBB));
+			}
+			//resets the frames to replace
+			timeToReplicate = 0;
+		}
+		else {
+			//increases time to replaces by one
+			timeToReplicate++;
+			cout << timeToReplicate << "  ";
+		}
+
+		//Set the modelview transform for the emeny bacteria
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
-			BadBacteria enemyN((*it).second.GetXCenter() + 1.0f, (*it).second.GetYCenter() + 1.0f);
-			enemiesTemp.insert(std::pair<int, BadBacteria>(numAddBB, enemyN));
-			numAddBB++;
-		}
-		//transfers the bad bacteria from the temperary map to the enemies map
-		for (map<int, BadBacteria>::iterator it = enemiesTemp.begin(); it != enemiesTemp.end(); it++) {
-			BadBacteria tempBB = (*it).second;
-			int tempNum = (*it).first;
-			//renders the Bad Bacteria
-			float red[3] = { 1, 0, 0 };
-			tempBB.SetRadius(2.0f);
-			tempBB.Init(myShader, red, "textures/BadBacteriaTransparent.png");
-
-			enemies.insert(std::pair<int, BadBacteria>(tempNum, tempBB));
-		}
-		//resets the frames to replace
-		timeToReplicate = 0;
-	}
-	else {
-		//increases time to replaces by one
-		timeToReplicate++;
-		cout << timeToReplicate << "  ";
-	}
-
-	//Set the modelview transform for the emeny bacteria
-	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
-		//cout << " inside display for loop ";
-		BadBacteria create = (*it).second;
-		float xLocation = create.GetXCenter();
-		//cout << xLocation;
-		// check if Bad Bacteria is close enough to player to run away
-		if ((myPlayer.GetXCenter() - create.GetXCenter()) * (myPlayer.GetXCenter() - create.GetXCenter()) +
-			(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) <
-			(myPlayer.GetRadius() + create.GetRadius()) * (myPlayer.GetRadius() + create.GetRadius()) + 100) {
-			//BB move away
-			float xMovement = (*it).second.GetXCenter() - myPlayer.GetXCenter();
-			float yMovement = (*it).second.GetYCenter() - myPlayer.GetYCenter();
-			if ((*it).second.GetXCenter() < xMax-2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
-				(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement /2000);
+			//cout << " inside display for loop ";
+			BadBacteria create = (*it).second;
+			float xLocation = create.GetXCenter();
+			//cout << xLocation;
+			// check if Bad Bacteria is close enough to player to run away
+			if ((myPlayer.GetXCenter() - create.GetXCenter()) * (myPlayer.GetXCenter() - create.GetXCenter()) +
+				(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) <
+				(myPlayer.GetRadius() + create.GetRadius()) * (myPlayer.GetRadius() + create.GetRadius()) + 100) {
+				//BB move away
+				float xMovement = (*it).second.GetXCenter() - myPlayer.GetXCenter();
+				float yMovement = (*it).second.GetYCenter() - myPlayer.GetYCenter();
+				if ((*it).second.GetXCenter() < xMax-2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
+					(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement /2000);
+				}
+				if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
+					(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement/2000);
+				}
 			}
-			if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
-				(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement/2000);
-			}
-		}
-		bool getNext = false;
-		for (map<int, BadBacteria>::iterator it2 = it; it2 != enemies.end(); it2++) {
-			if (getNext == false) {
-				getNext = true;
-			}
-			else {
-				//cout << "inside second for loop" << (*it2).first;
-				//check if it is in contact with any niebors, if so move
-				BadBacteria next = (*it2).second;
-				if ((next.GetXCenter() - create.GetXCenter()) * (next.GetXCenter() - create.GetXCenter()) +
-					(next.GetYCenter() - create.GetYCenter()) * (next.GetYCenter() - create.GetYCenter()) <
-					(next.GetRadius() + create.GetRadius()) * (next.GetRadius() + create.GetRadius())) {
-					float xMovement = (*it).second.GetXCenter() - next.GetXCenter();
-					float yMovement = (*it).second.GetYCenter() - next.GetYCenter();
-					if ((*it).second.GetXCenter() < xMax - 2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
-						(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement / 500);
-					}
-					if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
-						(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement / 500);
+			bool getNext = false;
+			for (map<int, BadBacteria>::iterator it2 = it; it2 != enemies.end(); it2++) {
+				if (getNext == false) {
+					getNext = true;
+				}
+				else {
+					//cout << "inside second for loop" << (*it2).first;
+					//check if it is in contact with any niebors, if so move
+					BadBacteria next = (*it2).second;
+					if ((next.GetXCenter() - create.GetXCenter()) * (next.GetXCenter() - create.GetXCenter()) +
+						(next.GetYCenter() - create.GetYCenter()) * (next.GetYCenter() - create.GetYCenter()) <
+						(next.GetRadius() + create.GetRadius()) * (next.GetRadius() + create.GetRadius())) {
+						float xMovement = (*it).second.GetXCenter() - next.GetXCenter();
+						float yMovement = (*it).second.GetYCenter() - next.GetYCenter();
+						if ((*it).second.GetXCenter() < xMax - 2.0f && (*it).second.GetXCenter() > -xMax + 2.0f) {
+							(*it).second.SetXCenter((*it).second.GetXCenter() + xMovement / 500);
+						}
+						if ((*it).second.GetYCenter() < yMax - 2.0f && (*it).second.GetYCenter() > -yMax + 2.0f) {
+							(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement / 500);
+						}
 					}
 				}
 			}
-		}
-		//check if in collition with Player
-		if ((myPlayer.GetXCenter() - create.GetXCenter())*(myPlayer.GetXCenter() - create.GetXCenter())+ 
-			(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) < 
-			(myPlayer.GetRadius() + create.GetRadius())* (myPlayer.GetRadius() + create.GetRadius())) {
-			//minus one from health of BB
-			(*it).second.SetHealth((*it).second.GetHealth() - 1);
-			cout << " minus one health" << (*it).second.GetHealth();
-		}
-		if (create.GetHealth() <= 0) {
-			//saves key to erase when out of loop
-			erase = (*it).first;
-		}
-		else {
-			glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(create.GetXCenter(), create.GetYCenter(), 0.0));
-			glEnable(GL_BLEND);
-				create.Render(myShader, enemyTransform, ProjectionMatrix);
-			glDisable(GL_BLEND);
-		}
+			//check if in collition with Player
+			if ((myPlayer.GetXCenter() - create.GetXCenter())*(myPlayer.GetXCenter() - create.GetXCenter())+ 
+				(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) < 
+				(myPlayer.GetRadius() + create.GetRadius())* (myPlayer.GetRadius() + create.GetRadius())) {
+				//minus one from health of BB
+				(*it).second.SetHealth((*it).second.GetHealth() - 1);
+				cout << " minus one health" << (*it).second.GetHealth();
+			}
+			if (create.GetHealth() <= 0) {
+				//saves key to erase when out of loop
+				erase = (*it).first;
+			}
+			else {
+				glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(create.GetXCenter(), create.GetYCenter(), 0.0));
+				glEnable(GL_BLEND);
+					create.Render(myShader, enemyTransform, ProjectionMatrix);
+				glDisable(GL_BLEND);
+			}
 		
+		}
+		//delete BB whos health is depleted
+		if (erase != -1) {
+			enemies.erase(erase);
+			erase = -1;
+		}
 	}
-	//delete BB whos health is depleted
-	if (erase != -1) {
-		enemies.erase(erase);
-		erase = -1;
-	}
+	
 
 	glutSwapBuffers();
 
@@ -354,6 +362,25 @@ void specialUp(int key, int x, int y)
 	}
 }
 
+void keyfunction(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case ' ':
+		startScreenShow = false;
+		break;
+	}
+}
+
+/*void keyfunctionUp(unsigned char key, int x, int y) {
+	switch (key)
+	{
+	case 'a':
+		startScreenShow = false;
+		break;
+	}
+}*/
+
 void processKeys()
 {
 	if (Left)
@@ -450,6 +477,11 @@ int main(int argc, char** argv)
 
 	glutSpecialFunc(special);
 	glutSpecialUpFunc(specialUp);
+
+	glutKeyboardFunc(keyfunction);
+	//glutKeyboardUpFunc(keyfunctionUp);
+
+
 	glutIdleFunc(idle);
 
 	//starts the main loop. Program loops and calls callback functions as appropriate.
