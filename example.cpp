@@ -205,13 +205,13 @@ void display()
 			cout << timeToReplicate << "  ";
 		}
 
-		float barPlacement = 0.0f;
+		float barPlacement = -29.0f;
 		//Set the modelview transform for the emeny bacteria
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
 			//add to the Bacteria number bar
-			glm::mat4 bar = glm::translate(ViewMatrix, glm::vec3(barPlacement, 0.0, 0.0));
+			glm::mat4 bar = glm::translate(ViewMatrix, glm::vec3(xCamera + barPlacement, yCamera + 28.0, 0.0));
 			numBar.Render(myShader, bar, ProjectionMatrix);
-			barPlacement++;
+			barPlacement = barPlacement + 0.5f;
 			//cout << " inside display for loop ";
 			BadBacteria create = (*it).second;
 			float xLocation = create.GetXCenter();
@@ -352,7 +352,7 @@ void init()
 	myPlayer.Init(myShader, green, "textures/Player2Transparent2.png");
 
 	//add bacteria num bar
-	numBar.SetWidth(1.0f);
+	numBar.SetWidth(0.5f);
 	numBar.SetHeight(2.0f);
 	numBar.Init(myShader, green, "textures/green2.png", 1.0, 1.0);
 	
