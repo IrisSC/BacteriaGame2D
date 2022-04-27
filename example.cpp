@@ -47,7 +47,7 @@ int screenWidth = 500, screenHeight = 480;
 
 Square myRedSquare, myGreenSquare;
 Shader myShader;
-Sprite background, startScreen, endCongrats, endDeath;
+Sprite background, startScreen, endCongrats, endDeath, numBar, numBarOutline;
 Player myPlayer;
 map<int, BadBacteria> enemies;
 BadBacteria enemy1(5.0f, 5.0f);
@@ -132,27 +132,35 @@ void display()
 	if (startScreenShow) {
 		//display the start screen
 		glm::mat4 startScreenTransform = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
-		startScreen.Render(myShader, startScreenTransform, ProjectionMatrix);
+		startScreen.Render(myShader, startScreenTransform, ProjectionMatrix, 1);
 	}
 
 	//check if the congradulations end screen should display
 	if (endCongratsShow) {
 		//display the congradulations end screen
 		glm::mat4 endScreenCongratsTransform = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
-		endCongrats.Render(myShader, endScreenCongratsTransform, ProjectionMatrix);
+		endCongrats.Render(myShader, endScreenCongratsTransform, ProjectionMatrix, 1);
 	}
 
 	//check if the death end screen should be displayed
 	if (endDeathShow) {
 		//display the death end screen
 		glm::mat4 endScreenDeathTransform = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
-		endDeath.Render(myShader, endScreenDeathTransform, ProjectionMatrix);
+		endDeath.Render(myShader, endScreenDeathTransform, ProjectionMatrix, 1);
 	}
 
 	//check if the game should be displayed
 	if (!startScreenShow && !endCongratsShow && !endDeathShow) {
 		//render the background
-		background.Render(myShader, ViewMatrix, ProjectionMatrix);
+		background.Render(myShader, ViewMatrix, ProjectionMatrix, 1);
+
+		//render number of bacteria bar
+		//numBar.SetWidth(enemies.size());
+		//float green[] = {0,0,1};
+		//numBar.Init(myShader, green, "textures/sky.png", 1.0, 1.0);
+		//glm::mat4 testing = glm::translate(ViewMatrix, glm::vec3(xCamera - 4.0, yCamera + 28.0, 0.0));
+		//numBarOutline.Render(myShader, testing, ProjectionMatrix, 0);
+		//numBar.Render(myShader, ViewMatrix, ProjectionMatrix);
 
 		//set the modelViewMatrix for the player circle
 		glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
@@ -197,6 +205,7 @@ void display()
 			cout << timeToReplicate << "  ";
 		}
 
+		float barPlacement = -29.0f;
 		//Set the modelview transform for the emeny bacteria
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
 			//cout << " inside display for loop ";
@@ -258,13 +267,19 @@ void display()
 					create.Render(myShader, enemyTransform, ProjectionMatrix);
 				glDisable(GL_BLEND);
 			}
-		
+			//add to the Bacteria number bar
+			glm::mat4 bar = glm::translate(ViewMatrix, glm::vec3(xCamera + barPlacement, yCamera + 28.0, 0.0));
+			numBar.Render(myShader, bar, ProjectionMatrix, 1);
+			barPlacement = barPlacement + 0.5f;
 		}
 		//delete BB whos health is depleted
 		if (erase != -1) {
 			enemies.erase(erase);
 			erase = -1;
 		}
+		//displey the outline for the number bar
+		glm::mat4 testing = glm::translate(ViewMatrix, glm::vec3(xCamera - 4.0, yCamera + 28.0, 0.0));
+		numBarOutline.Render(myShader, testing, ProjectionMatrix, 0);
 	}
 	
 	//check if player has killed all enemies
@@ -302,9 +317,11 @@ void init()
 		std::cout << "failed to load shader" << std::endl;
 	}*/
 	
+	//add colors
+	float green[3] = { 0, 1, 0 };
+	float red[3] = { 1,0,0 };
 
 	myRedSquare.SetSideSize(4.0f);
-	float red[3] = { 1,0,0 };
 	myRedSquare.Init(myShader, red);
 
 
@@ -334,9 +351,17 @@ void init()
 
 	//add the Player
 	myPlayer.SetRadius(4.0f);
-	float green[3] = { 0, 1, 0 };
-	
 	myPlayer.Init(myShader, green, "textures/Player2Transparent2.png");
+
+	//add bacteria num bar
+	numBar.SetWidth(0.5f);
+	numBar.SetHeight(2.0f);
+	numBar.Init(myShader, green, "textures/green2.png", 1.0, 1.0);
+
+	//add the outline for the bacteria number bar
+	numBarOutline.SetWidth(50.0);
+	numBarOutline.SetHeight(2.0);
+	numBarOutline.Init(myShader, green, "textures/green2.png", 1.0, 1.0);
 	
 	//add the enemies
 	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
