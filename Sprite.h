@@ -22,7 +22,8 @@ private:
 
 public:
 	Sprite();					//default constructor
-	void Init(Shader& shader, float colour[3], std::string filename);
+	void Init(Shader& shader, float colour[3], std::string filename, float repeatInS, float
+		repeatInT);
 	void SetWidth(float size);
 	void SetHeight(float size);
 	void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix);

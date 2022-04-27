@@ -28,7 +28,8 @@ void Sprite::SetHeight(float size)
 }
 
 
-void Sprite::Init(Shader& shader, float colour[3], std::string filename)
+void Sprite::Init(Shader& shader, float colour[3], std::string filename, float repeatInS, float
+	repeatInT)
 {
 	//load png image
 	int imageHeight = 0;
@@ -71,13 +72,13 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	vert[15] = halfWidth; vert[16] = -halfHeight; vert[17] = 0.0;
 
 	float tex[12];
-	tex[0] = 0.0f;	 tex[1] = 2.0f;
-	tex[2] = 0.0f;	 tex[3] = 0.0f;
-	tex[4] = 2.0f;	 tex[5] = 0.0f;
+	tex[0] = 0.0f;	 tex[1] = repeatInS;
+	tex[2] = 0.0f;	 tex[3] = 0.0;
+	tex[4] = repeatInT;	 tex[5] = 0.0;
 
-	tex[6] = 0.0f;	 tex[7] = 2.0f;
-	tex[8] = 2.0f;	 tex[9] = 2.0f;
-	tex[10] = 2.0f;	 tex[11] = 0.0f;
+	tex[6] = 0.0f;	 tex[7] = repeatInS;
+	tex[8] = repeatInT;	 tex[9] = repeatInS;
+	tex[10] = repeatInT; tex[11] = 0.0;
 
 
 	float col[18];	// colour array

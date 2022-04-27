@@ -47,7 +47,7 @@ int screenWidth = 500, screenHeight = 480;
 
 Square myRedSquare, myGreenSquare;
 Shader myShader;
-Sprite background;
+Sprite background, startScreen;
 Player myPlayer;
 map<int, BadBacteria> enemies;
 BadBacteria enemy1(5.0f, 5.0f);
@@ -59,6 +59,8 @@ int numAddBB = 4;
 int erase = -1;
 float num = -5.0f;
 
+//determines wether the start/end screens will display
+bool startScreenShow = true;
 
 //Variables for the positions of the squares
 float XRedSquare = -50.0f;
@@ -91,7 +93,7 @@ void reshape(int width, int height)		// Resize the OpenGL window
 
 	glViewport(0, 0, width, height);						// set Viewport dimensions
 
-	ProjectionMatrix = glm::ortho(-15.0, 15.0, -15.0, 15.0);
+	ProjectionMatrix = glm::ortho(-30.0, 30.0, -30.0, 30.0);
 }
 
 
@@ -113,10 +115,10 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	//set the camera x and y values
-	if (!(myPlayer.GetXCenter() <= (-xMax + 15)) && !(myPlayer.GetXCenter() >= (xMax - 15))) {
+	if (!(myPlayer.GetXCenter() <= (-xMax + 15)) && !(myPlayer.GetXCenter() >= (xMax - 30))) {
 		xCamera = myPlayer.GetXCenter();
 	}
-	if (!(myPlayer.GetYCenter() <= (-yMax + 15)) && !(myPlayer.GetYCenter() >= (yMax - 15))) {
+	if (!(myPlayer.GetYCenter() <= (-yMax + 15)) && !(myPlayer.GetYCenter() >= (yMax - 30))) {
 		yCamera = myPlayer.GetYCenter();
 	}
 	//set the view matrix
@@ -131,6 +133,10 @@ void display()
 	glEnable(GL_BLEND);
 		myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
 	glDisable(GL_BLEND);
+
+	//display the start screen
+	glm::mat4 startScreenTransform = glm::translate(ViewMatrix, glm::vec3(-xCamera, -yCamera, 0.0));
+	startScreen.Render(myShader, playerTransform, ProjectionMatrix);
 
 	//set the modelviewmatrix for the green square
 	/*glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(XGreenSquare, YGreenSquare, 0.0));
@@ -272,7 +278,12 @@ void init()
 	//create background
 	background.SetWidth(xMax*2.0f);
 	background.SetHeight(yMax*2.0f);
-	background.Init(myShader, red, "textures/Background.png");
+	background.Init(myShader, red, "textures/Background.png", 2.0, 2.0);
+
+	//create start screen
+	startScreen.SetWidth(60);
+	startScreen.SetHeight(60);
+	startScreen.Init(myShader, red, "textures/StartScreen3.png", 1.0, 1.0);
 	
 	/*myGreenSquare.SetSideSize(3.0f);
 	float green[3] = { 0,1,0 };
