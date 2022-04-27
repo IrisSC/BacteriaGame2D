@@ -47,7 +47,7 @@ int screenWidth = 500, screenHeight = 480;
 
 Square myRedSquare, myGreenSquare;
 Shader myShader;
-Sprite background, startScreen, endCongrats, endDeath;
+Sprite background, startScreen, endCongrats, endDeath, numBar, numBarOutline;
 Player myPlayer;
 map<int, BadBacteria> enemies;
 BadBacteria enemy1(5.0f, 5.0f);
@@ -154,6 +154,14 @@ void display()
 		//render the background
 		background.Render(myShader, ViewMatrix, ProjectionMatrix);
 
+		//render number of bacteria bar
+		//numBar.SetWidth(enemies.size());
+		//float green[] = {0,0,1};
+		//numBar.Init(myShader, green, "textures/sky.png", 1.0, 1.0);
+		//glm::mat4 testing = glm::translate(ViewMatrix, glm::vec3(5.0, 5.0, 0.0));
+		//numBar.Render(myShader, testing, ProjectionMatrix);
+		//numBar.Render(myShader, ViewMatrix, ProjectionMatrix);
+
 		//set the modelViewMatrix for the player circle
 		glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
 		glEnable(GL_BLEND);
@@ -197,8 +205,13 @@ void display()
 			cout << timeToReplicate << "  ";
 		}
 
+		float barPlacement = 0.0f;
 		//Set the modelview transform for the emeny bacteria
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
+			//add to the Bacteria number bar
+			glm::mat4 bar = glm::translate(ViewMatrix, glm::vec3(barPlacement, 0.0, 0.0));
+			numBar.Render(myShader, bar, ProjectionMatrix);
+			barPlacement++;
 			//cout << " inside display for loop ";
 			BadBacteria create = (*it).second;
 			float xLocation = create.GetXCenter();
@@ -302,9 +315,11 @@ void init()
 		std::cout << "failed to load shader" << std::endl;
 	}*/
 	
+	//add colors
+	float green[3] = { 0, 1, 0 };
+	float red[3] = { 1,0,0 };
 
 	myRedSquare.SetSideSize(4.0f);
-	float red[3] = { 1,0,0 };
 	myRedSquare.Init(myShader, red);
 
 
@@ -334,9 +349,12 @@ void init()
 
 	//add the Player
 	myPlayer.SetRadius(4.0f);
-	float green[3] = { 0, 1, 0 };
-	
 	myPlayer.Init(myShader, green, "textures/Player2Transparent2.png");
+
+	//add bacteria num bar
+	numBar.SetWidth(1.0f);
+	numBar.SetHeight(2.0f);
+	numBar.Init(myShader, green, "textures/sky.png", 1.0, 1.0);
 	
 	//add the enemies
 	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
