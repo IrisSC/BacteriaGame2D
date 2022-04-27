@@ -115,10 +115,10 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	//set the camera x and y values
-	if (!(myPlayer.GetXCenter() <= (-xMax + 15)) && !(myPlayer.GetXCenter() >= (xMax - 30))) {
+	if (!(myPlayer.GetXCenter() <= (-xMax + 30)) && !(myPlayer.GetXCenter() >= (xMax - 30))) {
 		xCamera = myPlayer.GetXCenter();
 	}
-	if (!(myPlayer.GetYCenter() <= (-yMax + 15)) && !(myPlayer.GetYCenter() >= (yMax - 30))) {
+	if (!(myPlayer.GetYCenter() <= (-yMax + 30)) && !(myPlayer.GetYCenter() >= (yMax - 30))) {
 		yCamera = myPlayer.GetYCenter();
 	}
 
