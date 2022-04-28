@@ -9,9 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Square.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="shaders\Shader.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -33,9 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="example.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Square.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="shaders\Shader.cpp">
