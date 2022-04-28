@@ -54,10 +54,10 @@ map<int, BadBacteria> enemies;
 int xMaxInt = (int)xMax;
 int yMaxInt = (int)yMax;
 //srand(time(NULL));
-BadBacteria enemy1(0.0f, 0.0f);
-BadBacteria enemy2(0.0f, 0.0f);
-BadBacteria enemy3(0.0f, 0.0f); 
-BadBacteria enemy4(0.0f, 0.0f);
+BadBacteria enemy1(0.0f, 0.0f, 0);
+BadBacteria enemy2(0.0f, 0.0f, 0);
+BadBacteria enemy3(0.0f, 0.0f, 0); 
+BadBacteria enemy4(0.0f, 0.0f, 0);
 int timeToReplicate = 0;
 int numAddBB = 4;
 int erase = -1;
@@ -181,11 +181,11 @@ void display()
 		myRedSquare.Render(myShader, redTransform, ProjectionMatrix);
 
 		//replicate Bad Bacteria
-		if (timeToReplicate == 2000) {
+		/*if (timeToReplicate == 2000) {
 			//creates the new Bad Bacteria and adds them to a map
 			map<int, BadBacteria> enemiesTemp;
 			for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
-				BadBacteria enemyN((*it).second.GetXCenter() + 1.0f, (*it).second.GetYCenter() + 1.0f);
+				BadBacteria enemyN((*it).second.GetXCenter() + 1.0f, (*it).second.GetYCenter() + 1.0f, 20000);
 				enemiesTemp.insert(std::pair<int, BadBacteria>(numAddBB, enemyN));
 				numAddBB++;
 			}
@@ -208,7 +208,7 @@ void display()
 			timeToReplicate++;
 			cout << timeToReplicate << "  ";
 		}
-
+		*/
 		float barPlacement = -29.0f;
 		//Set the modelview transform for the emeny bacteria
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
@@ -270,6 +270,25 @@ void display()
 				glEnable(GL_BLEND);
 					create.Render(myShader, enemyTransform, ProjectionMatrix);
 				glDisable(GL_BLEND);
+			}
+			//check if the Bacteria should replicate
+			if ((*it).second.GetTime() <= 0) {
+				//put in seed for random
+				srand(time(NULL));
+
+				//create new bacteria
+				BadBacteria enemyN((*it).second.GetXCenter() + 1.0f, (*it).second.GetYCenter() + 1.0f, rand() % (20000 - 5000) + 5000);
+				float red[3] = { 1, 0, 0 };
+				enemyN.SetRadius(2.0f);
+				enemyN.Init(myShader, red, "textures/BadBacteriaTransparent.png");
+				enemies.insert(std::pair<int, BadBacteria>(numAddBB, enemyN));
+				numAddBB++;
+
+				//reset old bacteria time
+				(*it).second.SetTime(rand() % (20000 - 5000) + 5000);
+			}
+			else {
+				(*it).second.SetTime((*it).second.GetTime() - 1);
 			}
 			//add to the Bacteria number bar
 			glm::mat4 bar = glm::translate(ViewMatrix, glm::vec3(xCamera + barPlacement, yCamera + 28.0, 0.0));
@@ -499,10 +518,15 @@ int main(int argc, char** argv)
 	//set the enmies to appear randomly
 	enemy1.SetXCenter((float)(rand() % ((xMaxInt - 2) - (-(xMaxInt - 2))) + -(xMaxInt - 2)));
 	enemy1.SetYCenter((float)(rand() % ((yMaxInt - 2) - (-(yMaxInt - 2))) + -(yMaxInt - 2)));
+	enemy1.SetTime(rand() % (20000 - 5000) + 5000);
+
 	enemy2.SetXCenter((float)(rand() % ((xMaxInt - 2) - (-(xMaxInt - 2))) + -(xMaxInt - 2)));
 	enemy2.SetYCenter((float)(rand() % ((yMaxInt - 2) - (-(yMaxInt - 2))) + -(yMaxInt - 2)));
+	enemy2.SetTime(rand() % (20000 - 5000) + 5000);
+
 	enemy3.SetXCenter((float)(rand() % ((xMaxInt - 2) - (-(xMaxInt - 2))) + -(xMaxInt - 2)));
 	enemy3.SetYCenter((float)(rand() % ((yMaxInt - 2) - (-(yMaxInt - 2))) + -(yMaxInt - 2)));
+	enemy3.SetTime(rand() % (20000 - 5000) + 5000);
 
 	enemies.insert(std::pair<int, BadBacteria>(1, enemy1));
 	cout << "X random center: " << rand()%50 << "stop random ";

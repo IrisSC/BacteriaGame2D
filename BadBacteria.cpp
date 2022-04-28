@@ -13,9 +13,10 @@ BadBacteria::BadBacteria()
 	m_Radius = 2.0f;
 
 	health = 100;
+	timeTilReplicate = 20000;
 }
 
-BadBacteria::BadBacteria(float x, float y) {
+BadBacteria::BadBacteria(float x, float y, int t) {
 	m_vaoID = 0;
 	m_vboID[0] = 0;
 	m_vboID[1] = 0;
@@ -24,6 +25,7 @@ BadBacteria::BadBacteria(float x, float y) {
 	health = 100;
 	xCenter = x;
 	yCenter = y;
+	timeTilReplicate = t;
 }
 
 void BadBacteria::SetRadius(float radius)
@@ -43,6 +45,10 @@ void BadBacteria::SetHealth(int h) {
 	health = h;
 }
 
+void BadBacteria::SetTime(int t) {
+	timeTilReplicate = t;
+}
+
 float BadBacteria::GetRadius() {
 	return m_Radius;
 }
@@ -57,6 +63,10 @@ float BadBacteria::GetYCenter() {
 
 int BadBacteria::GetHealth() {
 	return health;
+}
+
+int BadBacteria::GetTime() {
+	return timeTilReplicate;
 }
 
 void BadBacteria::Init(Shader& shader, float colour[3], std::string filename)
