@@ -22,6 +22,7 @@ using namespace std;
 #include <list>
 #include <iterator>
 #include <ctime>
+#include <vector>
 
 //included for getting time
 #include <ctime>
@@ -59,11 +60,11 @@ BadBacteria enemy1(0.0f, 0.0f, 0);
 BadBacteria enemy2(0.0f, 0.0f, 0);
 BadBacteria enemy3(0.0f, 0.0f, 0); 
 BadBacteria enemy4(0.0f, 0.0f, 0);
-bool addBacteria = true;
 
 //helps with adding and deleting bacteria
+bool addBacteria = true;
 int numAddBB = 5;
-int erase = -1;
+//int erase = -1;
 float num = -5.0f;
 
 //determines wether the start/end screens will display
@@ -165,6 +166,9 @@ void display()
 		//used for the placement of the bar
 		float barPlacement = -29.0f;
 
+		//for deleting bad bacteria
+		vector <int> erase;
+
 		//Set the modelview transform for the emeny bacteria
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
 			BadBacteria create = (*it).second;
@@ -219,7 +223,8 @@ void display()
 			//checks if health is less then or equal to 0
 			if (create.GetHealth() <= 0) {
 				//saves key to erase when out of loop
-				erase = (*it).first;
+				erase.push_back((*it).first);
+				//erase = ;
 			}
 			else {
 				glm::mat4 enemyTransform = glm::translate(ViewMatrix, glm::vec3(create.GetXCenter(), create.GetYCenter(), 0.0));
@@ -252,9 +257,8 @@ void display()
 			barPlacement = barPlacement + 0.5f;
 		}
 		//delete BB whos health is depleted
-		if (erase != -1) {
-			enemies.erase(erase);
-			erase = -1;
+		for (int i = 0; i < erase.size(); i++) {
+			enemies.erase(erase[i]);
 		}
 		//displey the outline for the number bar
 		glm::mat4 testing = glm::translate(ViewMatrix, glm::vec3(xCamera - 4.0, yCamera + 28.0, 0.0));
