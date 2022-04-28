@@ -104,9 +104,6 @@ void reshape(int width, int height)		// Resize the OpenGL window
 
 void display()
 { 
-	//initials the objects for rendering 
-	//init();
-	//BadBacteria enemy1(5.0f, 5.0f);
 	//obtain the ticks from the clock and find difference with previous time.
 	currentTicks = std::clock();
 	float deltaTicks = (float)(currentTicks - PreviousTicks);
@@ -114,7 +111,6 @@ void display()
 
 	//now find the actual time passed between frames
 	fDeltaTime = deltaTicks / (float)CLOCKS_PER_SEC;
-
 
 	//clear the colour buffer
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -128,7 +124,6 @@ void display()
 	}
 
 	//set the view matrix
-	//ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(-myPlayer.GetXCenter(), -myPlayer.GetYCenter(), 0.0));
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(-xCamera, -yCamera, 0.0));
 
 	//check if the start screen should be shown
@@ -157,56 +152,18 @@ void display()
 		//render the background
 		background.Render(myShader, ViewMatrix, ProjectionMatrix, 1);
 
-		//render number of bacteria bar
-		//numBar.SetWidth(enemies.size());
-		//float green[] = {0,0,1};
-		//numBar.Init(myShader, green, "textures/sky.png", 1.0, 1.0);
-		//glm::mat4 testing = glm::translate(ViewMatrix, glm::vec3(xCamera - 4.0, yCamera + 28.0, 0.0));
-		//numBarOutline.Render(myShader, testing, ProjectionMatrix, 0);
-		//numBar.Render(myShader, ViewMatrix, ProjectionMatrix);
-
 		//set the modelViewMatrix for the player circle
 		glm::mat4 playerTransform = glm::translate(ViewMatrix, glm::vec3(myPlayer.GetXCenter(), myPlayer.GetYCenter(), 0.0));
 		glEnable(GL_BLEND);
 			myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
 		glDisable(GL_BLEND);
 
-		//replicate Bad Bacteria
-		/*if (timeToReplicate == 2000) {
-			//creates the new Bad Bacteria and adds them to a map
-			map<int, BadBacteria> enemiesTemp;
-			for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
-				BadBacteria enemyN((*it).second.GetXCenter() + 1.0f, (*it).second.GetYCenter() + 1.0f, 20000);
-				enemiesTemp.insert(std::pair<int, BadBacteria>(numAddBB, enemyN));
-				numAddBB++;
-			}
-			//transfers the bad bacteria from the temperary map to the enemies map
-			for (map<int, BadBacteria>::iterator it = enemiesTemp.begin(); it != enemiesTemp.end(); it++) {
-				BadBacteria tempBB = (*it).second;
-				int tempNum = (*it).first;
-				//renders the Bad Bacteria
-				float red[3] = { 1, 0, 0 };
-				tempBB.SetRadius(2.0f);
-				tempBB.Init(myShader, red, "textures/BadBacteriaTransparent.png");
-
-				enemies.insert(std::pair<int, BadBacteria>(tempNum, tempBB));
-			}
-			//resets the frames to replace
-			timeToReplicate = 0;
-		}
-		else {
-			//increases time to replaces by one
-			timeToReplicate++;
-			cout << timeToReplicate << "  ";
-		}
-		*/
 		float barPlacement = -29.0f;
 		//Set the modelview transform for the emeny bacteria
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
-			//cout << " inside display for loop ";
 			BadBacteria create = (*it).second;
 			float xLocation = create.GetXCenter();
-			//cout << xLocation;
+			
 			// check if Bad Bacteria is close enough to player to run away
 			if ((myPlayer.GetXCenter() - create.GetXCenter()) * (myPlayer.GetXCenter() - create.GetXCenter()) +
 				(myPlayer.GetYCenter() - create.GetYCenter()) * (myPlayer.GetYCenter() - create.GetYCenter()) <
@@ -227,7 +184,6 @@ void display()
 					getNext = true;
 				}
 				else {
-					//cout << "inside second for loop" << (*it2).first;
 					//check if it is in contact with any niebors, if so move
 					BadBacteria next = (*it2).second;
 					if ((next.GetXCenter() - create.GetXCenter()) * (next.GetXCenter() - create.GetXCenter()) +
@@ -324,12 +280,6 @@ void init()
 
 	glClearColor(1.0, 1.0, 1.0, 0.0);						//sets the clear colour to black
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
-	/*if (!myShader.load("Basic", "./glslfiles/basicTransformations.vert", "./glslfiles/basicTransformations.frag"))
-	{
-		std::cout << "failed to load shader" << std::endl;
-	}*/
 	
 	//add colors
 	float green[3] = { 0, 1, 0 };
@@ -370,12 +320,6 @@ void init()
 	numBarOutline.Init(myShader, green, "textures/green2.png", 1.0, 1.0);
 	
 	//add the enemies
-	/*for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
-		//cout << "inside init loop" << (*it).second.GetXCenter();
-		(*it).second.SetRadius(2.0f);
-		(*it).second.Init(myShader, red, "textures/BadBacteriaTransparent.png");
-	}*/
-	
 	enemy1.SetRadius(2.0f);
 	enemy1.Init(myShader, red, "textures/BadBacteriaTransparent.png");
 
@@ -387,17 +331,7 @@ void init()
 
 	enemy4.SetRadius(2.0f);
 	enemy4.Init(myShader, red, "textures/BadBacteriaTransparent.png");
-	
-	//enemy2.SetRadius(2.0f);
-	//enemy2.Init(myShader, red);
 }
-
-//render new Bad Bacteria
-/*void initNewBB(BadBacteria newBB) {
-	float red[3] = { 1,0,0 };
-	newBB.SetRadius(2.0f);
-	newBB.Init(myShader, red);
-}*/
 
 void special(int key, int x, int y)
 {
@@ -446,15 +380,6 @@ void keyfunction(unsigned char key, int x, int y)
 		break;
 	}
 }
-
-/*void keyfunctionUp(unsigned char key, int x, int y) {
-	switch (key)
-	{
-	case 'a':
-		startScreenShow = false;
-		break;
-	}
-}*/
 
 void processKeys()
 {
@@ -525,24 +450,9 @@ int main(int argc, char** argv)
 	enemy4.SetTime(rand() % (20000 - 5000) + 5000);
 
 	enemies.insert(std::pair<int, BadBacteria>(1, enemy1));
-	cout << "X random center: " << rand()%50 << "stop random ";
 	enemies.insert(std::pair<int, BadBacteria>(2, enemy2));
 	enemies.insert(std::pair<int, BadBacteria>(3, enemy3));
 	enemies.insert(std::pair<int, BadBacteria>(4, enemy4));
-
-	
-
-	//replicate Bad Bacteria
-	/*if (timeToReplicate >= 200) {
-		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
-			BadBacteria newBB((*it).second.GetXCenter(), (*it).second.GetYCenter());
-			enemies.insert(std::pair<float, BadBacteria>(3, newBB));
-		}
-	}
-	else {
-		timeToReplicate++;
-		cout << timeToReplicate << "  ";
-	}*/
 
 	glutInit(&argc, argv);
 
@@ -577,8 +487,6 @@ int main(int argc, char** argv)
 	glutSpecialUpFunc(specialUp);
 
 	glutKeyboardFunc(keyfunction);
-	//glutKeyboardUpFunc(keyfunctionUp);
-
 
 	glutIdleFunc(idle);
 
