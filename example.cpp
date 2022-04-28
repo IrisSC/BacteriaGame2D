@@ -301,7 +301,7 @@ void init()
 	//create congrats end screen
 	endCongrats.SetWidth(60);
 	endCongrats.SetHeight(60);
-	endCongrats.Init(myShader, red, "textures/EndScreenCongrats1.png", 1.0, 1.0);
+	endCongrats.Init(myShader, red, "textures/EndScreenCongrats3.png", 1.0, 1.0);
 
 	//create the death end screen
 	endDeath.SetWidth(60);
