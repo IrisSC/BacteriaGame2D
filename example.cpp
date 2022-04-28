@@ -46,7 +46,6 @@ glm::mat4 ViewMatrix;  // matrix for the modelling and viewing
 glm::mat4 ProjectionMatrix; // matrix for the orthographic projection
 int screenWidth = 500, screenHeight = 480;
 
-Square myRedSquare;
 Shader myShader;
 Sprite background, startScreen, endCongrats, endDeath, numBar, numBarOutline;
 Player myPlayer;
@@ -171,10 +170,6 @@ void display()
 		glEnable(GL_BLEND);
 			myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
 		glDisable(GL_BLEND);
-
-		//Set the modelviewtransform for the red square.
-		glm::mat4 redTransform = glm::translate(ViewMatrix, glm::vec3(XRedSquare, YRedSquare, 0.0));
-		myRedSquare.Render(myShader, redTransform, ProjectionMatrix);
 
 		//replicate Bad Bacteria
 		/*if (timeToReplicate == 2000) {
@@ -339,10 +334,6 @@ void init()
 	//add colors
 	float green[3] = { 0, 1, 0 };
 	float red[3] = { 1,0,0 };
-
-	myRedSquare.SetSideSize(4.0f);
-	myRedSquare.Init(myShader, red);
-
 
 	//create background
 	background.SetWidth(xMax*2.0f);
