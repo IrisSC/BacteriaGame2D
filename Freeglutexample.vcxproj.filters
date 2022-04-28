@@ -12,9 +12,6 @@
     <ClInclude Include="shaders\Shader.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Circle.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -33,9 +30,6 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="shaders\Shader.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Circle.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">

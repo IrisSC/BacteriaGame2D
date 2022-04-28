@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BadBacteria.h" />
-    <ClInclude Include="Circle.h" />
     <ClInclude Include="ImageLoading.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="shaders\Shader.h" />
@@ -28,7 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BadBacteria.cpp" />
-    <ClCompile Include="Circle.cpp" />
     <ClCompile Include="example.cpp" />
     <ClCompile Include="ImageLoading.cpp" />
     <ClCompile Include="Player.cpp" />
