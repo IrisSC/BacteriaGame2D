@@ -46,7 +46,7 @@ glm::mat4 ViewMatrix;  // matrix for the modelling and viewing
 glm::mat4 ProjectionMatrix; // matrix for the orthographic projection
 int screenWidth = 500, screenHeight = 480;
 
-Square myRedSquare, myGreenSquare;
+Square myRedSquare;
 Shader myShader;
 Sprite background, startScreen, endCongrats, endDeath, numBar, numBarOutline;
 Player myPlayer;
@@ -171,10 +171,6 @@ void display()
 		glEnable(GL_BLEND);
 			myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
 		glDisable(GL_BLEND);
-
-		//set the modelviewmatrix for the green square
-		/*glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(XGreenSquare, YGreenSquare, 0.0));
-		myGreenSquare.Render(myShader, ModelViewMatrix, ProjectionMatrix);*/
 
 		//Set the modelviewtransform for the red square.
 		glm::mat4 redTransform = glm::translate(ViewMatrix, glm::vec3(XRedSquare, YRedSquare, 0.0));
@@ -367,10 +363,6 @@ void init()
 	endDeath.SetWidth(60);
 	endDeath.SetHeight(60);
 	endDeath.Init(myShader, red, "textures/EndScreen2.png", 1.0, 1.0);
-	
-	/*myGreenSquare.SetSideSize(3.0f);
-	float green[3] = { 0,1,0 };
-	myGreenSquare.Init(myShader, green);*/
 
 	//add the Player
 	myPlayer.SetRadius(4.0f);
