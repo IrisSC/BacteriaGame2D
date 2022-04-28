@@ -59,6 +59,7 @@ BadBacteria enemy1(0.0f, 0.0f, 0);
 BadBacteria enemy2(0.0f, 0.0f, 0);
 BadBacteria enemy3(0.0f, 0.0f, 0); 
 BadBacteria enemy4(0.0f, 0.0f, 0);
+bool addBacteria = true;
 
 //helps with adding and deleting bacteria
 int numAddBB = 5;
@@ -452,10 +453,14 @@ int main(int argc, char** argv)
 	enemy4.SetYCenter((float)(rand() % ((yMaxInt - 2) - (-(yMaxInt - 2))) + -(yMaxInt - 2)));
 	enemy4.SetTime(rand() % (20000 - 5000) + 5000);
 
-	enemies.insert(std::pair<int, BadBacteria>(1, enemy1));
-	enemies.insert(std::pair<int, BadBacteria>(2, enemy2));
-	enemies.insert(std::pair<int, BadBacteria>(3, enemy3));
-	enemies.insert(std::pair<int, BadBacteria>(4, enemy4));
+	if (addBacteria) {
+		enemies.insert(std::pair<int, BadBacteria>(1, enemy1));
+		enemies.insert(std::pair<int, BadBacteria>(2, enemy2));
+		enemies.insert(std::pair<int, BadBacteria>(3, enemy3));
+		enemies.insert(std::pair<int, BadBacteria>(4, enemy4));
+		addBacteria = false;
+	}
+	
 
 	glutInit(&argc, argv);
 
