@@ -46,18 +46,21 @@ glm::mat4 ViewMatrix;  // matrix for the modelling and viewing
 glm::mat4 ProjectionMatrix; // matrix for the orthographic projection
 int screenWidth = 500, screenHeight = 480;
 
+//creating the Shader, Player, and Bacground objects
 Shader myShader;
 Sprite background, startScreen, endCongrats, endDeath, numBar, numBarOutline;
 Player myPlayer;
+
+//creating the itial bacteria
 map<int, BadBacteria> enemies;
 int xMaxInt = (int)xMax;
 int yMaxInt = (int)yMax;
-//srand(time(NULL));
 BadBacteria enemy1(0.0f, 0.0f, 0);
 BadBacteria enemy2(0.0f, 0.0f, 0);
 BadBacteria enemy3(0.0f, 0.0f, 0); 
 BadBacteria enemy4(0.0f, 0.0f, 0);
-int timeToReplicate = 0;
+
+//helps with adding and deleting bacteria
 int numAddBB = 5;
 int erase = -1;
 float num = -5.0f;
@@ -158,7 +161,9 @@ void display()
 			myPlayer.Render(myShader, playerTransform, ProjectionMatrix);
 		glDisable(GL_BLEND);
 
+		//used for the placement of the bar
 		float barPlacement = -29.0f;
+
 		//Set the modelview transform for the emeny bacteria
 		for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
 			BadBacteria create = (*it).second;
@@ -178,13 +183,15 @@ void display()
 					(*it).second.SetYCenter((*it).second.GetYCenter() + yMovement/2000);
 				}
 			}
+			// this bool makes sure doesn't compare current bacteria to itself
 			bool getNext = false;
+			//checks if bacteria is in contact with any other bacteria
 			for (map<int, BadBacteria>::iterator it2 = it; it2 != enemies.end(); it2++) {
 				if (getNext == false) {
 					getNext = true;
 				}
 				else {
-					//check if it is in contact with any niebors, if so move
+					//check if it is in contact with any nieghbors, if so move
 					BadBacteria next = (*it2).second;
 					if ((next.GetXCenter() - create.GetXCenter()) * (next.GetXCenter() - create.GetXCenter()) +
 						(next.GetYCenter() - create.GetYCenter()) * (next.GetYCenter() - create.GetYCenter()) <
@@ -208,6 +215,7 @@ void display()
 				(*it).second.SetHealth((*it).second.GetHealth() - 1);
 				cout << " minus one health" << (*it).second.GetHealth();
 			}
+			//checks if health is less then or equal to 0
 			if (create.GetHealth() <= 0) {
 				//saves key to erase when out of loop
 				erase = (*it).first;
@@ -263,20 +271,15 @@ void display()
 	}
 
 	glutSwapBuffers();
-
-	Angle += 0.0005f;
-	if (Angle >= 360)
-		Angle = 0;
-
 }
 
 void init()
 {
+	//makes sure Shader will load
 	if (!myShader.load("Basic", "./glslfiles/basicTexture.vert", "./glslfiles/basicTexture.frag"))
 	{
 		std::cout << "failed to load shader" << std::endl;
 	}
-
 
 	glClearColor(1.0, 1.0, 1.0, 0.0);						//sets the clear colour to black
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
