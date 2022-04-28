@@ -31,8 +31,8 @@ using namespace std;
 using namespace std;
 
 /*Variables for game Boundry*/
-float xMax = 50.0f;
-float yMax = 50.0f;
+float xMax = 75.0f;
+float yMax = 75.0f;
 float xCamera = 0;
 float yCamera = 0;
 
@@ -59,7 +59,7 @@ BadBacteria enemy2(0.0f, 0.0f, 0);
 BadBacteria enemy3(0.0f, 0.0f, 0); 
 BadBacteria enemy4(0.0f, 0.0f, 0);
 int timeToReplicate = 0;
-int numAddBB = 4;
+int numAddBB = 5;
 int erase = -1;
 float num = -5.0f;
 
@@ -387,14 +387,23 @@ void init()
 	numBarOutline.Init(myShader, green, "textures/green2.png", 1.0, 1.0);
 	
 	//add the enemies
-	for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
+	/*for (map<int, BadBacteria>::iterator it = enemies.begin(); it != enemies.end(); it++) {
 		//cout << "inside init loop" << (*it).second.GetXCenter();
 		(*it).second.SetRadius(2.0f);
 		(*it).second.Init(myShader, red, "textures/BadBacteriaTransparent.png");
-	}
+	}*/
 	
 	enemy1.SetRadius(2.0f);
 	enemy1.Init(myShader, red, "textures/BadBacteriaTransparent.png");
+
+	enemy2.SetRadius(2.0f);
+	enemy2.Init(myShader, red, "textures/BadBacteriaTransparent.png");
+
+	enemy3.SetRadius(2.0f);
+	enemy3.Init(myShader, red, "textures/BadBacteriaTransparent.png");
+
+	enemy4.SetRadius(2.0f);
+	enemy4.Init(myShader, red, "textures/BadBacteriaTransparent.png");
 	
 	//enemy2.SetRadius(2.0f);
 	//enemy2.Init(myShader, red);
@@ -528,10 +537,15 @@ int main(int argc, char** argv)
 	enemy3.SetYCenter((float)(rand() % ((yMaxInt - 2) - (-(yMaxInt - 2))) + -(yMaxInt - 2)));
 	enemy3.SetTime(rand() % (20000 - 5000) + 5000);
 
+	enemy4.SetXCenter((float)(rand() % ((xMaxInt - 2) - (-(xMaxInt - 2))) + -(xMaxInt - 2)));
+	enemy4.SetYCenter((float)(rand() % ((yMaxInt - 2) - (-(yMaxInt - 2))) + -(yMaxInt - 2)));
+	enemy4.SetTime(rand() % (20000 - 5000) + 5000);
+
 	enemies.insert(std::pair<int, BadBacteria>(1, enemy1));
 	cout << "X random center: " << rand()%50 << "stop random ";
 	enemies.insert(std::pair<int, BadBacteria>(2, enemy2));
 	enemies.insert(std::pair<int, BadBacteria>(3, enemy3));
+	enemies.insert(std::pair<int, BadBacteria>(4, enemy4));
 
 	
 
